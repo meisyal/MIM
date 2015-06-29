@@ -17,3 +17,44 @@ angular.module('starter', ['ionic'])
     }
   });
 })
+
+.config(function($stateProvider, $urlRouterProvider)) {
+  $stateProvider
+    .state('config', {
+      url: '/config',
+      templateUrl: '/templates/config.html',
+      controller: 'ConfigController'
+    })
+    .state('categories', {
+      url: '/categories',
+      templateUrl: 'templates/categories.html',
+      controller: 'CategoriesController'
+    })
+    .state('lists', {
+      url: '/lists/:categoryId',
+      templateUrl: 'templates/lists.html',
+      controller: 'ListsController'
+    })
+    .state('items', {
+      url: 'items/:listId',
+      templateUrl: 'templates/items.html',
+      controller: ItemsController
+    });
+  $urlRouterProvider.otherwise('/config');
+}
+
+.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $location, $ionicHistory, $cordovaSQLite) {
+
+});
+
+.controller("CategoriesController", function($scope, $ionicPlatform, $cordovaSQLite) {
+
+});
+
+.controller("ListsController", function($scope, $ionicPlatform, $ionicPopup, $cordovaSQLite, $stateParams) {
+
+});
+
+.controller("ItemsController", function($scope, $ionicPlatform, $ionicPopup, $cordovaSQLite, $stateParams) {
+
+});
