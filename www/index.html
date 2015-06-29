@@ -28,6 +28,14 @@
         <h1 class="title">Ionic Blank Starter</h1>
       </ion-header-bar>
       <ion-content>
+        <ion-nav-view>
+          <ion-list show-delete="false" can-swipe="true">
+            <ion-item ng-repeat="item in items">
+              {{item.todo_list_item_name}}
+              <ion-option-button class="button-assertive icon ion-trash-a" ng-click="delete(item)"></ion-option-button>
+            </ion-item>
+          </ion-list>
+        </ion-nav-view>
       </ion-content>
     </ion-pane>
   </body>
