@@ -1,0 +1,12 @@
+<ion-view title="Items">
+    <ion-nav-buttons side="right">
+        <button class="right button button-icon icon ion-plus" ng-click="insert()"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="item in items">
+                {{item.todo_list_item_name}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
