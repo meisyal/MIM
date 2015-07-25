@@ -18,7 +18,7 @@ MIM.run(function($ionicPlatform) {
   });
 });
 
-.config(function($stateProvider, $urlRouterProvider)) {
+MIM.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('config', {
       url: '/config',
@@ -38,23 +38,23 @@ MIM.run(function($ionicPlatform) {
     .state('items', {
       url: 'items/:listId',
       templateUrl: 'templates/items.html',
-      controller: ItemsController
+      controller: 'ItemsController'
     });
-  $urlRouterProvider.otherwise('/config');
-}
-
-.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $location, $ionicHistory, $cordovaSQLite) {
 
 });
 
-.controller("CategoriesController", function($scope, $ionicPlatform, $cordovaSQLite) {
+.controller('ConfigController', function($scope) {
 
 });
 
-.controller("ListsController", function($scope, $ionicPlatform, $ionicPopup, $cordovaSQLite, $stateParams) {
+.controller("CategoriesController", function($scope) {
 
 });
 
-.controller("ItemsController", function($scope, $ionicPlatform, $ionicPopup, $cordovaSQLite, $stateParams) {
+.controller("ListsController", function($scope) {
+
+});
+
+.controller("ItemsController", function($scope) {
 
 });
