@@ -41,10 +41,14 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'templates/items.html',
       controller: 'ItemsController'
     });
-
+    $urlRouterProvider.otherwise("/config");
 });
 
-MIM.controller('ConfigController', function($scope, $ionicLoading, $cordovaSQLite, $location) {
+MIM.controller('ConfigController', function($scope, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
+  $ionicHistory.nextViewOptions({
+    disableAnimate: true,
+    disableBack: true
+  });
   $ionicPlatform.ready(function() {
     $ionicLoading.show({ template: 'Loading...' });
       if (window.cordova) {
