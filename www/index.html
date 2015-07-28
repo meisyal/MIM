@@ -16,7 +16,7 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="ng-cordova.min.js"></script>
+    <script src="js/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
@@ -28,14 +28,7 @@
       <ion-header-bar class="bar-stable">
         <h1 class="title">Mobile Inventory Manager</h1>
       </ion-header-bar>
-      <ion-nav-view>
-        <ion-list show-delete="false" can-swipe="true">
-          <ion-item ng-repeat="item in items">
-            {{item.todo_list_item_name}}
-            <ion-option-button class="button-assertive icon ion-trash-a" ng-click="delete(item)"></ion-option-button>
-          </ion-item>
-        </ion-list>
-      </ion-nav-view>
+      <ion-nav-view></ion-nav-view>
     </ion-pane>
   </body>
 </html>
