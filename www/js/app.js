@@ -78,8 +78,20 @@ MIM.controller('ConfigController', function($scope, $ionicLoading, $cordovaSQLit
   })
 });
 
-MIM.controller("CategoriesController", function($scope) {
-
+MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordovaSQLite) {
+  $scope.categories = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT id, category_name FROM tblCategories';
+    $cordovaSQLite.execute(db, query, []).then(function(res) {
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.categories.push({id: res.rows.items(i).id, category_name: res.rows.items(i).category_name});
+        }
+      }
+    }), function(error) {
+      console.error(error);
+    });
+  });
 });
 
 MIM.controller("ListsController", function($scope) {
