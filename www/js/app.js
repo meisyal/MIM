@@ -94,8 +94,39 @@ MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller("ListsController", function($scope) {
+MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
+  $scope.categories = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT id, category_id, todo_list_name FROM tblTodoLists WHERE category_id = ?';
+    $cordovaSQLite.execute(db, query, [$stateParams.categoryId]).then(function(res) {
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.lists.push({id: res.rows.items(i).id, category_id: res.rows.items(i).category_id, todo_list_name: res.rows.items(i).todo_list_name});
+        }
+      }
+    }), function(error) {
+      console.error(error);
+    });
+  });
 
+  $scope.insert = function() {
+    $ionicPopup.prompt({
+      title: 'Enter a new TODO list',
+      inputType: 'text'
+    })
+    .then(function(result) {
+      if (result != undefined) {
+        var query = 'INSERT INTO tblTodoLists (category_id, todo_list_name) VALUES (?, ?)';
+        $cordovaSQLite.execute(db, query, [$stateParams.categoryId, result]).then(function(res) {
+          $scope.lists.push({id: res.insertId, category_id: $stateParams.categoryId, todo_list_name: result});
+        }, function(error) {
+          console.error(error);
+        });
+      } else {
+        console.log('Action not completed ');
+      }
+    });
+  }
 });
 
 MIM.controller("ItemsController", function($scope) {
