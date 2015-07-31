@@ -95,7 +95,7 @@ MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordova
 });
 
 MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
-  $scope.categories = [];
+  $scope.lists = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, category_id, todo_list_name FROM tblTodoLists WHERE category_id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.categoryId]).then(function(res) {
@@ -123,12 +123,43 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
           console.error(error);
         });
       } else {
-        console.log('Action not completed ');
+        console.log('Action not completed');
       }
     });
   }
 });
 
-MIM.controller("ItemsController", function($scope) {
+MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
+  $scope.items = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT id, todo_list_id, todo_list_item_name FROM tblTodoListItems WHERE todo_list_id = ?';
+    $cordovaSQLite.execute(db, query, [$stateParams.listId]).then(function(res) {
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.lists.push({id: res.rows.items(i).id, todo_list_id: res.rows.items(i).todo_list_id, todo_list_item_name: res.rows.items(i).todo_list_item_name});
+        }
+      }
+    }), function(error) {
+      console.error(error);
+    });
+  });
 
+  $scope.insert = function() {
+    $ionicPopup.prompt({
+      title: 'Enter a new TODO list item',
+      inputType: 'text'
+    })
+    .then(function(result) {
+      if (result != undefined) {
+        var query = 'INSERT INTO tblTodoListItems (todo_list_id, todo_list_item_name) VALUES (?, ?)';
+        $cordovaSQLite.execute(db, query, [$stateParams.listId, result]).then(function(res) {
+          $scope.lists.push({id: res.insertId, todo_list_id: $stateParams.listId, todo_list_item_name: result});
+        }, function(error) {
+          console.error(error);
+        });
+      } else {
+        console.log('Action not completed');
+      }
+    });
+  }
 });
