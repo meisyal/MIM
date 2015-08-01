@@ -1,2 +1,3 @@
 # MIM
-Description of this repository will be provided soon as well as the project is being started.
+
+MIM stands for Mobile Inventory Manager.
