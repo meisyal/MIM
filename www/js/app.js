@@ -88,7 +88,7 @@ MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordova
           $scope.categories.push({id: res.rows.items(i).id, category_name: res.rows.items(i).category_name});
         }
       }
-    }), function(error) {
+    }, function(error) {
       console.error(error);
     });
   });
@@ -104,7 +104,7 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
           $scope.lists.push({id: res.rows.items(i).id, category_id: res.rows.items(i).category_id, todo_list_name: res.rows.items(i).todo_list_name});
         }
       }
-    }), function(error) {
+    }, function(error) {
       console.error(error);
     });
   });
@@ -139,7 +139,7 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
           $scope.lists.push({id: res.rows.items(i).id, todo_list_id: res.rows.items(i).todo_list_id, todo_list_item_name: res.rows.items(i).todo_list_item_name});
         }
       }
-    }), function(error) {
+    }, function(error) {
       console.error(error);
     });
   });
