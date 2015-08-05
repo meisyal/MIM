@@ -23,7 +23,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('config', {
       url: '/config',
-      templateUrl: '/templates/config.html',
+      templateUrl: 'templates/config.html',
       controller: 'ConfigController'
     })
     .state('categories', {
@@ -44,7 +44,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/config");
 });
 
-MIM.controller('ConfigController', function($scope, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
+MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
   $ionicHistory.nextViewOptions({
     disableAnimate: true,
     disableBack: true
