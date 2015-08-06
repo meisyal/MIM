@@ -57,6 +57,7 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
           $ionicLoading.hide();
           $location.path('/categories');
         }, function(error) {
+          console.error("There was an error copying the database: " + error);
           db = $cordovaSQLite.openDB('populated.db');
           $ionicLoading.hide();
           $location.path('/categories');
@@ -75,7 +76,7 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
         $ionicLoading.hide();
         $location.path('/categories');
       }
-  })
+  });
 });
 
 MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordovaSQLite) {
@@ -85,7 +86,7 @@ MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordova
     $cordovaSQLite.execute(db, query, []).then(function(res) {
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.categories.push({id: res.rows.items(i).id, category_name: res.rows.items(i).category_name});
+          $scope.categories.push({id: res.rows.item(i).id, category_name: res.rows.item(i).category_name});
         }
       }
     }, function(error) {
@@ -101,7 +102,7 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
     $cordovaSQLite.execute(db, query, [$stateParams.categoryId]).then(function(res) {
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.lists.push({id: res.rows.items(i).id, category_id: res.rows.items(i).category_id, todo_list_name: res.rows.items(i).todo_list_name});
+          $scope.lists.push({id: res.rows.item(i).id, category_id: res.rows.item(i).category_id, todo_list_name: res.rows.item(i).todo_list_name});
         }
       }
     }, function(error) {
@@ -136,7 +137,7 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
     $cordovaSQLite.execute(db, query, [$stateParams.listId]).then(function(res) {
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.lists.push({id: res.rows.items(i).id, todo_list_id: res.rows.items(i).todo_list_id, todo_list_item_name: res.rows.items(i).todo_list_item_name});
+          $scope.lists.push({id: res.rows.item(i).id, todo_list_id: res.rows.item(i).todo_list_id, todo_list_item_name: res.rows.item(i).todo_list_item_name});
         }
       }
     }, function(error) {
