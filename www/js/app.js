@@ -151,7 +151,7 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
       inputType: 'text'
     })
     .then(function(result) {
-      if (result != undefined) {
+      if (result !== undefined) {
         var query = 'INSERT INTO tblTodoListItems (todo_list_id, todo_list_item_name) VALUES (?, ?)';
         $cordovaSQLite.execute(db, query, [$stateParams.listId, result]).then(function(res) {
           $scope.lists.push({id: res.insertId, todo_list_id: $stateParams.listId, todo_list_item_name: result});
@@ -161,6 +161,15 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
       } else {
         console.log('Action not completed');
       }
+    });
+  }
+
+  $scope.delete = function() {
+    var query = "DELETE FROM tblTodoListItems WHERE id = ?";
+    $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+    }, function(error) {
+      console.error(error);
     });
   }
 });
