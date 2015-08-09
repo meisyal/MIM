@@ -128,6 +128,18 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
       }
     });
   }
+
+  $scope.delete = function(item) {
+    var outerQuery = "DELETE FROM tblTodoListItems WHERE todo_list_id = ?";
+    var innerQuery = "DELETE FROM tblTodoLists WHERE id = ?";
+    $cordovaSQLite.execute(db, outerQuery, [item.id]).then(function(res) {
+      $cordovaSQLite.execute(db, innerQuery, [item.id]).then(function(res) {
+        $scope.lists.splice($scope.lists.indexOf(item), 1);
+      });
+    }, function(error) {
+      console.error(error);
+    });
+  }
 });
 
 MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
