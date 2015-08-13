@@ -37,7 +37,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       controller: 'ListsController'
     })
     .state('items', {
-      url: 'items/:listId',
+      url: '/items/:listId',
       templateUrl: 'templates/items.html',
       controller: 'ItemsController'
     });
@@ -116,7 +116,7 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
       inputType: 'text'
     })
     .then(function(result) {
-      if (result != undefined) {
+      if (result !== undefined) {
         var query = 'INSERT INTO tblTodoLists (category_id, todo_list_name) VALUES (?, ?)';
         $cordovaSQLite.execute(db, query, [$stateParams.categoryId, result]).then(function(res) {
           $scope.lists.push({id: res.insertId, category_id: $stateParams.categoryId, todo_list_name: result});
