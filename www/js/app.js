@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var MIM = angular.module('starter', ['ionic', 'starter.controller']);
+var MIM = angular.module('starter', ['ionic', 'starter.controllers']);
 
 MIM.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,25 +20,47 @@ MIM.run(function($ionicPlatform) {
 
 MIM.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-    .state('config', {
+    .state('app', {
+      url: '/app',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'AppController'
+    })
+    .state('app.config', {
       url: '/config',
-      templateUrl: 'templates/config.html',
-      controller: 'ConfigController'
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/config.html',
+          controller: 'ConfigController'
+        }
+      }
     })
-    .state('categories', {
+    .state('app.categories', {
       url: '/categories',
-      templateUrl: 'templates/categories.html',
-      controller: 'CategoriesController'
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/categories.html',
+          controller: 'CategoriesController'
+        }
+      }
     })
-    .state('lists', {
+    .state('app.lists', {
       url: '/lists/:categoryId',
-      templateUrl: 'templates/lists.html',
-      controller: 'ListsController'
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/lists.html',
+          controller: 'ListsController'
+        }
+      }
     })
-    .state('items', {
+    .state('app.items', {
       url: '/items/:listId',
-      templateUrl: 'templates/items.html',
-      controller: 'ItemsController'
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/items.html',
+          controller: 'ItemsController'
+        }
+      }
     });
-    $urlRouterProvider.otherwise("/config");
+    $urlRouterProvider.otherwise("/app/config");
 });

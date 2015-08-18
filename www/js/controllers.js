@@ -1,5 +1,9 @@
-var MIM = angular.module('starter.controller', ['ionic', 'ngCordova']);
+var MIM = angular.module('starter.controllers', ['ngCordova']);
 var db = null;
+
+MIM.controller('AppController', function($location) {
+  $location.path('/app/config');
+})
 
 MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
   $ionicHistory.nextViewOptions({
@@ -12,12 +16,12 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
         window.plugins.sqlDB.copy('populated.db', function() {
           db = $cordovaSQLite.openDB('populated.db');
           $ionicLoading.hide();
-          $location.path('/categories');
+          $location.path('/app/categories');
         }, function(error) {
           console.error("There was an error copying the database: " + error);
           db = $cordovaSQLite.openDB('populated.db');
           $ionicLoading.hide();
-          $location.path('/categories');
+          $location.path('/app/categories');
         });
       } else {
         db = openDatabase('websql.db', '1.0', 'My WebSQL Database', 2 * 1024 * 1024);
@@ -31,7 +35,7 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
           tx.executeSql('INSERT INTO tblCategories (category_name) VALUES (?)', ['School']);
         });
         $ionicLoading.hide();
-        $location.path('/categories');
+        $location.path('/app/categories');
       }
   });
 });
