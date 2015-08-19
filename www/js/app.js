@@ -61,6 +61,15 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
           controller: 'ItemsController'
         }
       }
+    })
+    .state('app.customer', {
+      url: '/customer',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/customers.html',
+          controller: 'CustomerController'
+        }
+      }
     });
     $urlRouterProvider.otherwise("/app/config");
 });

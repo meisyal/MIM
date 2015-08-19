@@ -3,7 +3,7 @@ var db = null;
 
 MIM.controller('AppController', function($location) {
   $location.path('/app/config');
-})
+});
 
 MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
   $ionicHistory.nextViewOptions({
@@ -13,15 +13,15 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
   $ionicPlatform.ready(function() {
     $ionicLoading.show({ template: 'Loading...' });
       if (window.cordova) {
-        window.plugins.sqlDB.copy('populated.db', function() {
-          db = $cordovaSQLite.openDB('populated.db');
+        window.plugins.sqlDB.copy('MIM.db', function() {
+          db = $cordovaSQLite.openDB('MIM.db');
           $ionicLoading.hide();
-          $location.path('/app/categories');
+          $location.path('/app/customer');
         }, function(error) {
           console.error("There was an error copying the database: " + error);
-          db = $cordovaSQLite.openDB('populated.db');
+          db = $cordovaSQLite.openDB('MIM.db');
           $ionicLoading.hide();
-          $location.path('/app/categories');
+          $location.path('/app/customer');
         });
       } else {
         db = openDatabase('websql.db', '1.0', 'My WebSQL Database', 2 * 1024 * 1024);
@@ -145,4 +145,20 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
       console.error(error);
     });
   }
+});
+
+MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQLite) {
+  $scope.customers = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT id, customer_name, customer_address, customer_phone FROM tblCustomers';
+    $cordovaSQLite.execute(db, query, []).then(function(res) {
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name, customer_address: res.rows.item(i).customer_address, customer_phone: res.rows.item(i).customer_phone});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
 });
