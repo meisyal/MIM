@@ -1,14 +1,12 @@
 # MIM
 
-MIM stands for *Mobile Inventory Manager*.
+MIM stands for **M**obile **I**nventory **M**anager.
+
+This project originally came from [natsumiaya][natsumiaya]. It got stuck in the past (middle 2015). Now, I am ([meisyal][meisyal]) eager to continue this project.
 
 ## Status
 
-Currently, this project is under development. There are still many requirements that have not been finished yet.
-
-## Contributors
-
-This project originally came from [natsumiaya][natsumiaya]. It got stuck in the past. Now, I am ([meisyal][meisyal]) eager to continue this project.
+Currently, this project is under development. There are still many requirements that have not been finished yet. Documentation is not available for now.
 
 ## License
 
