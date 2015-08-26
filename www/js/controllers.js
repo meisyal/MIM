@@ -147,7 +147,7 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
   }
 });
 
-MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQLite) {
+MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, customer_name, customer_address, customer_phone FROM tblCustomers';
@@ -161,4 +161,29 @@ MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQ
       console.error(error);
     });
   });
+
+  $scope.customersData = {};
+
+  $ionicModal.fromTemplateUrl('templates/addcustomer.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.closeAddCustomer = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.addCustomer = function() {
+    $scope.modal.show();
+  };
+
+  $scope.insert = function(customersData) {
+    var query = 'INSERT INTO tblCustomers (customer_name, customer_address, customer_phone) VALUES (?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
+      $scope.customers.push({id: res.insertId, customer_name: customersData.name, customer_address: customersData.address, customer_phone: customersData.phone});
+    }, function(error) {
+        console.error(error);
+    });
+  }
 });
