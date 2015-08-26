@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Add a New Customer</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeAddCustomer()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="insert(customersData)">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Name</span>
+          <input type="text" ng-model="customersData.name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Address</span>
+          <input type="text" ng-model="customersData.address">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Phone Number</span>
+          <input type="text" ng-model="customersData.phone">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Add</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
