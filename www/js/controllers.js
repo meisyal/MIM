@@ -5,7 +5,7 @@ MIM.controller('AppController', function($location) {
   $location.path('/app/config');
 });
 
-MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoading, $cordovaSQLite, $location, $ionicHistory) {
+MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $location, $ionicHistory) {
   $ionicHistory.nextViewOptions({
     disableAnimate: true,
     disableBack: true
@@ -13,13 +13,13 @@ MIM.controller('ConfigController', function($scope, $ionicPlatform, $ionicLoadin
   $ionicPlatform.ready(function() {
     $ionicLoading.show({ template: 'Loading...' });
       if (window.cordova) {
-        window.plugins.sqlDB.copy('MIM.db', function() {
-          db = $cordovaSQLite.openDB('MIM.db');
+        window.plugins.sqlDB.copy('MIM.db', 0, function() {
+          db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
           $ionicLoading.hide();
           $location.path('/app/customer');
         }, function(error) {
           console.error("There was an error copying the database: " + error);
-          db = $cordovaSQLite.openDB('MIM.db');
+          db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
           $ionicLoading.hide();
           $location.path('/app/customer');
         });
@@ -150,19 +150,17 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
 MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
-    var query = 'SELECT id, customer_name, customer_address, customer_phone FROM tblCustomers';
+    var query = 'SELECT id, customer_name FROM tblCustomers';
     $cordovaSQLite.execute(db, query, []).then(function(res) {
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name, customer_address: res.rows.item(i).customer_address, customer_phone: res.rows.item(i).customer_phone});
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name});
         }
       }
     }, function(error) {
       console.error(error);
     });
   });
-
-  $scope.customersData = {};
 
   $ionicModal.fromTemplateUrl('templates/addcustomer.html', {
     scope: $scope
@@ -183,7 +181,7 @@ MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQ
     $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
       $scope.customers.push({id: res.insertId, customer_name: customersData.name, customer_address: customersData.address, customer_phone: customersData.phone});
     }, function(error) {
-        console.error(error);
+      console.error(error);
     });
   }
 });
