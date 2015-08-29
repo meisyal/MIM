@@ -18,7 +18,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
           $ionicLoading.hide();
           $location.path('/app/customer');
         }, function(error) {
-          console.error("There was an error copying the database: " + error);
+          console.error('There was an error copying the database: ' + error);
           db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
           $ionicLoading.hide();
           $location.path('/app/customer');
@@ -40,7 +40,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
   });
 });
 
-MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordovaSQLite) {
+MIM.controller('CategoriesController', function($scope, $ionicPlatform, $cordovaSQLite) {
   $scope.categories = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, category_name FROM tblCategories';
@@ -56,7 +56,7 @@ MIM.controller("CategoriesController", function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
+MIM.controller('ListsController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
   $scope.lists = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, category_id, todo_list_name FROM tblTodoLists WHERE category_id = ?';
@@ -88,11 +88,11 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
         console.log('Action not completed');
       }
     });
-  }
+  };
 
   $scope.delete = function(item) {
-    var outerQuery = "DELETE FROM tblTodoListItems WHERE todo_list_id = ?";
-    var innerQuery = "DELETE FROM tblTodoLists WHERE id = ?";
+    var outerQuery = 'DELETE FROM tblTodoListItems WHERE todo_list_id = ?';
+    var innerQuery = 'DELETE FROM tblTodoLists WHERE id = ?';
     $cordovaSQLite.execute(db, outerQuery, [item.id]).then(function(res) {
       $cordovaSQLite.execute(db, innerQuery, [item.id]).then(function(res) {
         $scope.lists.splice($scope.lists.indexOf(item), 1);
@@ -100,10 +100,10 @@ MIM.controller("ListsController", function($scope, $ionicPlatform, $cordovaSQLit
     }, function(error) {
       console.error(error);
     });
-  }
+  };
 });
 
-MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
+MIM.controller('ItemsController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
   $scope.items = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, todo_list_id, todo_list_item_name FROM tblTodoListItems WHERE todo_list_id = ?';
@@ -135,24 +135,24 @@ MIM.controller("ItemsController", function($scope, $ionicPlatform, $cordovaSQLit
         console.log('Action not completed');
       }
     });
-  }
+  };
 
   $scope.delete = function() {
-    var query = "DELETE FROM tblTodoListItems WHERE id = ?";
+    var query = 'DELETE FROM tblTodoListItems WHERE id = ?';
     $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
       $scope.items.splice($scope.items.indexOf(item), 1);
     }, function(error) {
       console.error(error);
     });
-  }
+  };
 });
 
-MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, customer_name FROM tblCustomers';
     $cordovaSQLite.execute(db, query, []).then(function(res) {
-      if (res.rows.length > 0) {
+      if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name});
         }
@@ -162,26 +162,42 @@ MIM.controller("CustomerController", function($scope, $ionicPlatform, $cordovaSQ
     });
   });
 
+  $scope.addCustomer = function(customersData) {
+    var query = 'INSERT INTO tblCustomers (customer_name, customer_address, customer_phone) VALUES (?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
+      $scope.customers.push({id: res.insertId, customer_name: customersData.name, customer_address: customersData.address, customer_phone: customersData.phone});
+      customersData.newItem = ' ';
+      $scope.closeCustomerModal();
+    }, function(error) {
+      console.error(error);
+    });
+  };
+
   $ionicModal.fromTemplateUrl('templates/addcustomer.html', {
-    scope: $scope
+    scope: $scope,
+    animation: 'slide-in-up'
   }).then(function(modal) {
     $scope.modal = modal;
   });
 
-  $scope.closeAddCustomer = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.addCustomer = function() {
+  $scope.openCustomerModal = function() {
     $scope.modal.show();
   };
 
-  $scope.insert = function(customersData) {
-    var query = 'INSERT INTO tblCustomers (customer_name, customer_address, customer_phone) VALUES (?, ?, ?)';
-    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
-      $scope.customers.push({id: res.insertId, customer_name: customersData.name, customer_address: customersData.address, customer_phone: customersData.phone});
+  $scope.closeCustomerModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+  $scope.deleteCustomer = function(customer) {
+    var query = 'DELETE FROM tblCustomers WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [customer.id]).then(function() {
+      $scope.customers.splice($scope.customers.indexOf(customer), 1);
     }, function(error) {
       console.error(error);
     });
-  }
+  };
 });
