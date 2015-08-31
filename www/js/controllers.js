@@ -147,6 +147,18 @@ MIM.controller('ItemsController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 });
 
+MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+  $scope.inventory = [];
+  $scope.addProduct = function(productData) {
+    var query = 'INSERT INTO tblProducts (product_name, product_description, product_amount, purchase_price, selling_price) VALUES (?, ?, ?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.purchase_price, productData.selling_price]).then(function(res) {
+      $scope.inventory.push({id: res.insertId, product_name: productData.name, product_description: productData.description, product_amount: productData.amount, purchase_price: productData.purchase_price, selling_price: productData.selling_price});
+    }, function(error) {
+      console.error(error);
+    });
+  };
+});
+
 MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
