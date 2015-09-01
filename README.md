@@ -8,30 +8,52 @@ This project originally came from [natsumiaya][natsumiaya]. We collaborated in a
 
 ## Installation
 
-If you want to build and/or test yourself while this project is under development, make sure you have installed **[Node.js][nodejs]** (I would recommend Node **v0.12.x** or any latest version).
+If you want to build and/or test yourself while this project is under development, make sure you have installed **[node.js][nodejs] or [io.js][iojs]** (I would recommend node.js **v0.12.x**/io.js **v1.6.x** or any latest version). After that, don't forget to install [SQLite][sqlite] and make a database along with tables, you can give a name, `MIM.db`, for example. I will provide the database schema soon. I run this project on **Ubuntu** operating system. So, you have to adjust the environment for development.
 
-Follow the steps below:
+```bash
+$ sudo apt-get update
+$ sudo apt-get install sqlite3 libsqlite3-dev
+$ sqlite3 MIM.db
+```
+
+Beside that, this project requires two Cordova plugins:
+- [Cordova SQLite Storage][sqlite-storage]
+- [SQLite dbcopy][sqlite-dbcopy]
+
+Please, read the documentation of two plugins above before you start moving forward.
+
+If you have passed the requirements above, now, you can follow the steps below:
+
 1. Install [Cordova][cordova] and [Ionic Framework][ionic] via npm, you can use this command
+
    ```bash
    $ npm install -g cordova ionic
    ```
+
 2. Create a blank start Ionic project in folder/location where you want and then change directory into your project name, MIM,
    in this case.
+
    ```bash
    $ ionic start MIM blank
    ```
-3. Download the [latest][download] `.zip` version of this project and put them into your project directory (replacing `www` folder and some
-   files, like `config.xml`).
+
+3. Download the [latest][download] `.zip` version of this project and put them into your project directory (replacing `www`
+   folder and some files, like `config.xml`).
 4. Add Android platform into your ionic project, for example.
+
    ```bash
    $ cd MIM
    $ ionic platform add android
    ```
+
 5. Build the source code until you get success message.
+
    ```bash
    $ ionic build android
    ```
-6. You can either emulate or install the `.apk`
+
+6. You can either emulate or install the `.apk` file.
+
    ```bash
    $ ionic emulate android
    ```
@@ -50,6 +72,10 @@ The side menu icons (add-inventory.svg, customers.svg, inventory-item.svg, sales
 
 [natsumiaya]: https://github.com/natsumiaya
 [nodejs]: https://nodejs.org/
+[iojs]: https://iojs.org/
+[sqlite]: http://sqlite.org/
+[sqlite-storage]:  https://github.com/litehelpers/Cordova-sqlite-storage
+[sqlite-dbcopy]: https://github.com/an-rahulpandey/cordova-plugin-dbcopy
 [cordova]: https://cordova.apache.org/
 [ionic]: http://ionicframework.com/
 [download]: https://github.com/meisyal/MIM/archive/master.zip
