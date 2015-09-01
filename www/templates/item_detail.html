@@ -1,0 +1,28 @@
+<ion-view title="Item Detail">
+  <ion-content>
+    <div class="list card">
+      <div class="item item-avatar">
+        <i class="icon ion-bag"></i>
+        <h2>{{ product_name }}</h2>
+        <p>unknown date inserted</p>
+      </div>
+      <div class="item item-body">
+        <p>{{ product_description }}</p>
+      </div>
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" href="#">
+          <i class="icon ion-briefcase"></i>
+          {{ product_amount }}
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-android-cart"></i>
+          US$ {{ purchase_price }}
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-pricetag"></i>
+          US$ {{ selling_price }}
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

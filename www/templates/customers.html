@@ -5,7 +5,7 @@
   <ion-content>
     <ion-list>
       <ion-item ng-repeat="customer in customers" href="#">
-        {{customer.customer_name}}
+        {{ customer.customer_name }}
         <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteCustomer(customer)"></ion-option-button>
       </ion-item>
     </ion-list>
