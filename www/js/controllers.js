@@ -147,7 +147,7 @@ MIM.controller('ItemsController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 });
 
-MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
   $scope.inventory = [];
   $scope.addProduct = function(productData) {
     var query = 'INSERT INTO tblProducts (product_name, product_description, product_amount, purchase_price, selling_price) VALUES (?, ?, ?, ?, ?)';
@@ -157,6 +157,22 @@ MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordo
       console.error(error);
     });
   };
+});
+
+MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite) {
+    $scope.inventory = [];
+    $ionicPlatform.ready(function() {
+      var query = 'SELECT id, product_name, product_amount FROM tblProducts ORDER BY product_amount DESC';
+      $cordovaSQLite.execute(db, query, []).then(function(res) {
+        if (res.rows.length) {
+          for (var i = 0; i < res.rows.length; i++) {
+            $scope.inventory.push({id: res.rows.item(i).id, product_name: res.rows.item(i).product_name, product_amount: res.rows.item(i).product_amount});
+          }
+        }
+      }, function(error) {
+        console.error(error);
+      });
+    });
 });
 
 MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
