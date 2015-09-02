@@ -85,7 +85,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/item_detail.html',
-          controller: 'DetailItemController'
+          controller: 'ItemDetailController'
         }
       }
     })
@@ -95,6 +95,15 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
         'menuContent': {
           templateUrl: 'templates/customers.html',
           controller: 'CustomerController'
+        }
+      }
+    })
+    .state('app.customerdetail', {
+      url: '/customer-detail/:customerId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/customer_detail.html',
+          controller: 'CustomerDetailController'
         }
       }
     });

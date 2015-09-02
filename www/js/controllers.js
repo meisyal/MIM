@@ -175,7 +175,7 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
     });
 });
 
-MIM.controller('DetailItemController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
+MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
     var query = 'SELECT product_name, product_description, product_amount, purchase_price, selling_price FROM tblProducts WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.itemId]).then(function(res) {
@@ -245,4 +245,19 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
       console.error(error);
     });
   };
+});
+
+MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT customer_name, customer_address, customer_phone FROM tblCustomers WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
+      if (res.rows.length) {
+        $scope.customer_name = res.rows.item(0).customer_name;
+        $scope.customer_address = res.rows.item(0).customer_address;
+        $scope.customer_phone = res.rows.item(0).customer_phone;
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
 });
