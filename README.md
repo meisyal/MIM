@@ -2,25 +2,34 @@
 
 MIM stands for **M**obile **I**nventory **M**anager.
 
-**MIM** is a mobile phone application that will help a shopkeeper to manage his/her small shop inventory. A shopkeeper usually taking inventory activities into a notebook. We looked it is so hard to handle some cases: searching history of sales order or making a monthly report, for example. This is a motivation why we build MIM (short version). We hope MIM is not only helping a shopkeeper make a decision he/she should take but also growing his/her business.
+**MIM** is a mobile phone application for a shopkeeper. This application is designed to help a shopkeeper to manage his/her small shop inventory. A shopkeeper usually takes inventory activities into a notebook. We looked it is so hard to handle some cases: knowing the number of item in inventory or reporting monthly statistic into a chart, for example. This is a motivation why we build MIM (short version). We hope MIM is not only helping a shopkeeper make a decision he/she should take but also growing his/her business.
 
 This project originally came from [natsumiaya][natsumiaya]. We collaborated in a team to develop this project. But, it got stuck in the middle 2015. I don't want to leave it. I am eager to continue this project.
 
 ## Installation
 
-If you want to build and/or test yourself while this project is under development, make sure you have installed **[node.js][nodejs] or [io.js][iojs]** (I would recommend node.js **v0.12.x**/io.js **v1.6.x** or any latest version). After that, don't forget to install [SQLite][sqlite] and make a database along with tables, you can give a name, `MIM.db`, for example. I will provide the database schema soon. I run this project on **Ubuntu** operating system. So, you have to adjust the environment for development.
+If you want to build and/or test yourself while this project is under development, make sure you have passed following the requirements.
+
+Note: I run this project on **Ubuntu** operating system. So, you have to adjust the environment for development.
+
+### Requirements
+
+You have to install **[node.js][nodejs] or [io.js][iojs]** (I would recommend node.js **v0.12.x**/io.js **v3.2.x** or any latest version).
+
+After that, don't forget to install [SQLite][sqlite].
 
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install sqlite3 libsqlite3-dev
+```
+
+Make a database along with tables, you can give a name, `MIM.db`, for example. I will provide the database schema soon.
+
+```bash
 $ sqlite3 MIM.db
 ```
 
-Beside that, this project requires two Cordova plugins:
-- [Cordova SQLite Storage][sqlite-storage]
-- [SQLite dbcopy][sqlite-dbcopy]
-
-Please, read the documentation of two plugins above before you start moving forward.
+### Building from Source
 
 If you have passed the requirements above, now, you can follow the steps below:
 
@@ -46,13 +55,19 @@ If you have passed the requirements above, now, you can follow the steps below:
    $ ionic platform add android
    ```
 
-5. Build the source code until you get success message.
+5. Beside that, this project requires two Cordova plugins:
+   - [Cordova SQLite Storage][sqlite-storage]
+   - [SQLite dbcopy][sqlite-dbcopy]
+
+   Please, read theirs documentation about how to install two plugins above into your `ionic` project before you start moving forward.
+
+6. Build the source code until you get success message.
 
    ```bash
    $ ionic build android
    ```
 
-6. You can either emulate or install the `.apk` file.
+7. You can either emulate or install the `.apk` file.
 
    ```bash
    $ ionic emulate android
