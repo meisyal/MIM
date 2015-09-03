@@ -35,33 +35,6 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('app.categories', {
-      url: '/categories',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/categories.html',
-          controller: 'CategoriesController'
-        }
-      }
-    })
-    .state('app.lists', {
-      url: '/lists/:categoryId',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/lists.html',
-          controller: 'ListsController'
-        }
-      }
-    })
-    .state('app.items', {
-      url: '/items/:listId',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/items.html',
-          controller: 'ItemsController'
-        }
-      }
-    })
     .state('app.addinventory', {
       url: '/add-inventory',
       views: {
