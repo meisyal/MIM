@@ -35,6 +35,15 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('app.sales', {
+      url: '/sales',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/sales.html',
+          controller: 'SalesController'
+        }
+      }
+    })
     .state('app.addinventory', {
       url: '/add-inventory',
       views: {

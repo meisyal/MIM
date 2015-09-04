@@ -26,18 +26,51 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
       } else {
         db = openDatabase('websql.db', '1.0', 'My WebSQL Database', 2 * 1024 * 1024);
         db.transaction(function(tx) {
-          tx.executeSql('DROP TABLE IF EXISTS tblCategories');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS tblCategories (id integer primary key, category_name text)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS tblTodoLists (id integer primary key, category_id integer, todo_list_name text)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS tblTodoListItems (id integer primary key, todo_list_id integer, todo_list_item_name text)');
-          tx.executeSql('INSERT INTO tblCategories (category_name) VALUES (?)', ['Shopping']);
-          tx.executeSql('INSERT INTO tblCategories (category_name) VALUES (?)', ['Chores']);
-          tx.executeSql('INSERT INTO tblCategories (category_name) VALUES (?)', ['School']);
+          tx.executeSql('DROP TABLE IF EXISTS tblCustomers');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS tblCustomers (id integer primary key, customer_name text, customer_address text, customer_phone text)');
         });
         $ionicLoading.hide();
-        $location.path('/app/categories');
+        $location.path('/app/inventory-items');
       }
   });
+});
+
+MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite) {
+  $scope.customers = [];
+  $scope.products = [];
+  $ionicPlatform.ready(function() {
+    var customerQuery = 'SELECT id, customer_name FROM tblCustomers';
+    $cordovaSQLite.execute(db, customerQuery, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+
+    var productQuery = 'SELECT id, product_name FROM tblProducts';
+    $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.products.push({id: res.rows.item(i).id, product_name: res.rows.item(i).product_name});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
+
+  $scope.addSale = function(saleData) {
+    $scope.sales = [];
+    var query = 'INSERT INTO tblSales (id, customer_id, sale_date, sale_categories, total_price, sale status) VALUES (?, CURRENT_TIMESTAMP, 1, ?, 1)';
+    $cordovaSQLite.execute(db, query, [saleData.customers, saleData.total_price]).then(function(res) {
+      $scope.sales.push({id: res.insertId, customer_id: saleData.customers, total_price: saleData.total_price});
+    }, function(error) {
+      console.error(error);
+    });
+  };
 });
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
@@ -111,7 +144,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
     });
   };
 
-  $ionicModal.fromTemplateUrl('templates/addcustomer.html', {
+  $ionicModal.fromTemplateUrl('templates/add_customer.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
