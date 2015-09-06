@@ -72,9 +72,9 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
   $scope.inventory = [];
   $scope.addProduct = function(productData) {
-    var query = 'INSERT INTO tblProducts (product_name, product_description, product_amount, purchase_price, selling_price) VALUES (?, ?, ?, ?, ?)';
-    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.purchase_price, productData.selling_price]).then(function(res) {
-      $scope.inventory.push({id: res.insertId, product_name: productData.name, product_description: productData.description, product_amount: productData.amount, purchase_price: productData.purchase_price, selling_price: productData.selling_price});
+    var query = 'INSERT INTO Products (name, description, remaining_amount, selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
+      $scope.inventory.push({id: res.insertId, product_name: productData.name, product_description: productData.description, product_amount: productData.amount, selling_price: productData.selling_price, purchase_price: productData.purchase_price});
     }, function(error) {
       console.error(error);
     });
@@ -84,11 +84,11 @@ MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordo
 MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite) {
     $scope.inventory = [];
     $ionicPlatform.ready(function() {
-      var query = 'SELECT id, product_name, product_amount FROM tblProducts ORDER BY product_amount DESC';
+      var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
       $cordovaSQLite.execute(db, query, []).then(function(res) {
         if (res.rows.length) {
           for (var i = 0; i < res.rows.length; i++) {
-            $scope.inventory.push({id: res.rows.item(i).id, product_name: res.rows.item(i).product_name, product_amount: res.rows.item(i).product_amount});
+            $scope.inventory.push({id: res.rows.item(i).id, product_name: res.rows.item(i).name, product_amount: res.rows.item(i).remaining_amount});
           }
         }
       }, function(error) {
@@ -99,14 +99,16 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
 
 MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
-    var query = 'SELECT product_name, product_description, product_amount, purchase_price, selling_price FROM tblProducts WHERE id = ?';
+    var query = 'SELECT name, description, remaining_amount, selling_price, purchase_price, DATETIME(created_at, \'localtime\') AS created_date, DATETIME(updated_at, \'localtime\') AS updated_date FROM Products WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.itemId]).then(function(res) {
       if (res.rows.length) {
-        $scope.product_name = res.rows.item(0).product_name;
-        $scope.product_description = res.rows.item(0).product_description;
-        $scope.product_amount = res.rows.item(0).product_amount;
-        $scope.purchase_price = res.rows.item(0).purchase_price;
-        $scope.selling_price = res.rows.item(0).selling_price;
+        $scope.product_name = res.rows.item(0).name;
+        $scope.product_description = res.rows.item(0).description;
+        $scope.product_amount = res.rows.item(0).remaining_amount;
+        $scope.purchase_price = res.rows.item(0).selling_price;
+        $scope.selling_price = res.rows.item(0).purchase_price;
+        $scope.created_date = res.rows.item(0).created_date;
+        $scope.updated_date = res.rows.item(0).updated_date;
       }
     }, function(error) {
       console.error(error);
