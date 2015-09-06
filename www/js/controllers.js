@@ -24,13 +24,9 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
           $location.path('/app/customer');
         });
       } else {
-        db = openDatabase('websql.db', '1.0', 'My WebSQL Database', 2 * 1024 * 1024);
-        db.transaction(function(tx) {
-          tx.executeSql('DROP TABLE IF EXISTS tblCustomers');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS tblCustomers (id integer primary key, customer_name text, customer_address text, customer_phone text)');
-        });
-        $ionicLoading.hide();
-        $location.path('/app/inventory-items');
+        console.log('You are using browser to test and run the app.');
+        console.log('WebSQL has been deprecated. - http://dev.w3.org/html5/webdatabase/');
+        console.log('Please, use the mobile device or emulator instead of browser.');
       }
   });
 });
@@ -121,11 +117,11 @@ MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordova
 MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
-    var query = 'SELECT id, customer_name FROM tblCustomers';
+    var query = 'SELECT id, name FROM Customers';
     $cordovaSQLite.execute(db, query, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name});
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).name});
         }
       }
     }, function(error) {
@@ -134,7 +130,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   });
 
   $scope.addCustomer = function(customersData) {
-    var query = 'INSERT INTO tblCustomers (customer_name, customer_address, customer_phone) VALUES (?, ?, ?)';
+    var query = 'INSERT INTO Customers (name, address, telephone_number) VALUES (?, ?, ?)';
     $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
       $scope.customers.push({id: res.insertId, customer_name: customersData.name, customer_address: customersData.address, customer_phone: customersData.phone});
       customersData.newItem = ' ';
@@ -164,7 +160,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   });
 
   $scope.deleteCustomer = function(customer) {
-    var query = 'DELETE FROM tblCustomers WHERE id = ?';
+    var query = 'DELETE FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, query, [customer.id]).then(function() {
       $scope.customers.splice($scope.customers.indexOf(customer), 1);
     }, function(error) {
@@ -175,12 +171,13 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
 
 MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
-    var query = 'SELECT customer_name, customer_address, customer_phone FROM tblCustomers WHERE id = ?';
+    var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') AS joined_date FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
       if (res.rows.length) {
-        $scope.customer_name = res.rows.item(0).customer_name;
-        $scope.customer_address = res.rows.item(0).customer_address;
-        $scope.customer_phone = res.rows.item(0).customer_phone;
+        $scope.customer_name = res.rows.item(0).name;
+        $scope.customer_address = res.rows.item(0).address;
+        $scope.customer_phone = res.rows.item(0).telephone_number;
+        $scope.customer_joined = res.rows.item(0).joined_date;
       }
     }, function(error) {
       console.error(error);
