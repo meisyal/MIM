@@ -4,6 +4,7 @@
       <ion-item ng-repeat="item in inventory" href="#/app/item-detail/{{ item.id }}">
         {{ item.product_name }}
         <span class="badge badge-balanced">{{ item.product_amount }}</span>
+        <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteItem(item)"></ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>

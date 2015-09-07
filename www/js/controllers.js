@@ -35,7 +35,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   $scope.customers = [];
   $scope.products = [];
   $ionicPlatform.ready(function() {
-    var customerQuery = 'SELECT id, customer_name FROM tblCustomers';
+    var customerQuery = 'SELECT id, name FROM Customers';
     $cordovaSQLite.execute(db, customerQuery, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
@@ -46,7 +46,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
       console.error(error);
     });
 
-    var productQuery = 'SELECT id, product_name FROM tblProducts';
+    var productQuery = 'SELECT id, name FROM Products';
     $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
@@ -95,6 +95,15 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
         console.error(error);
       });
     });
+
+    $scope.deleteItem = function(item) {
+      var query = 'DELETE FROM Products WHERE id = ?';
+      $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
+        $scope.inventory.splice($scope.inventory.indexOf(item), 1);
+      }, function(error) {
+        console.error(error);
+      });
+    };
 });
 
 MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
