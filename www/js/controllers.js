@@ -39,7 +39,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
     $cordovaSQLite.execute(db, customerQuery, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).customer_name});
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).name});
         }
       }
     }, function(error) {
@@ -50,7 +50,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
     $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.products.push({id: res.rows.item(i).id, product_name: res.rows.item(i).product_name});
+          $scope.products.push({id: res.rows.item(i).id, product_name: res.rows.item(i).name});
         }
       }
     }, function(error) {
@@ -60,11 +60,14 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
 
   $scope.addSale = function(saleData) {
     $scope.sales = [];
-    var query = 'INSERT INTO tblSales (id, customer_id, sale_date, sale_categories, total_price, sale status) VALUES (?, CURRENT_TIMESTAMP, 1, ?, 1)';
-    $cordovaSQLite.execute(db, query, [saleData.customers, saleData.total_price]).then(function(res) {
-      $scope.sales.push({id: res.insertId, customer_id: saleData.customers, total_price: saleData.total_price});
-    }, function(error) {
+    var transactQuery = 'INSERT INTO Transactions (categories, total_price, status, customer_id) VALUES (?, ?, ?, ?)';
+    var buyQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
+    $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function(tx) {
+      $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function(res) {
+        console.log('Customer id ' + saleData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
+      }, function(error) {
       console.error(error);
+      });
     });
   };
 });
@@ -74,7 +77,7 @@ MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordo
   $scope.addProduct = function(productData) {
     var query = 'INSERT INTO Products (name, description, remaining_amount, selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
     $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
-      $scope.inventory.push({id: res.insertId, product_name: productData.name, product_description: productData.description, product_amount: productData.amount, selling_price: productData.selling_price, purchase_price: productData.purchase_price});
+      console.log('Item ' + res.insertId + ' is successfully inserted.');
     }, function(error) {
       console.error(error);
     });
