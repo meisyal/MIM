@@ -59,21 +59,42 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   });
 
   $scope.addSale = function(saleData) {
-    $scope.sales = [];
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, status, customer_id) VALUES (?, ?, ?, ?)';
     var buyQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
     $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function(tx) {
       $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function(res) {
         console.log('Customer id ' + saleData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
+        $scope.getRemainingAmount(saleData.products, saleData.amount);
+        $scope.updateProductAmount(saleData.products, saleData.amount);
       }, function(error) {
       console.error(error);
       });
     });
   };
+
+  $scope.getRemainingAmount = function(id, amount) {
+    var query = 'SELECT remaining_amount FROM Products WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [id]).then(function(res) {
+      if (res.rows.length) {
+        $scope.remaining_amount = res.rows.item(0).remaining_amount - amount;
+        $scope.updateProductAmount(id, $scope.remaining_amount);
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  };
+
+  $scope.updateProductAmount = function(id, remaining_amount) {
+    var query = 'UPDATE Products SET remaining_amount = ? WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [remaining_amount, id]).then(function(res) {
+      console.log('one row is affected');
+    }, function(error) {
+      console.error(error);
+    })
+  };
 });
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
-  $scope.inventory = [];
   $scope.addProduct = function(productData) {
     var query = 'INSERT INTO Products (name, description, remaining_amount, selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
     $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
