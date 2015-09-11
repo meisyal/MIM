@@ -1,0 +1,37 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">Add a New Order</h1>
+    <div class="buttons">
+      <button class="button button-clear button-assertive" ng-click="closeOrderModal()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="addOrder(ordersData)">
+      <div class="list">
+        <label class="item item-input item-select">
+          <span class="input-label">Customer Name</span>
+          <select name="customers" ng-model="ordersData.customers" ng-options="customer.id as customer.customer_name for customer in customers">
+            <option value="">Choose customer</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <span class="input-label">Product Name</span>
+          <select name="products" ng-model="ordersData.products" ng-options="product.id as product.product_name for product in products">
+            <option value="">Choose item</option>
+          </select>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Amount</span>
+          <input type="text" placeholder="2" ng-model="ordersData.amount">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Total Price (US$)</span>
+          <input type="text" placeholder="49.99" ng-model="ordersData.total_price">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Add</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

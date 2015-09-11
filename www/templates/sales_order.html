@@ -1,0 +1,13 @@
+<ion-view title="Sales Order">
+  <ion-nav-buttons side="right">
+    <button class="right button button-icon icon ion-plus" ng-click="openOrderModal()"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="order in orders" href="#">
+        {{ order.customer_name }}
+        <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteOrder(order)"></ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

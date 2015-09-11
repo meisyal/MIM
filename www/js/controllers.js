@@ -90,8 +90,55 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
       console.log('one row is affected');
     }, function(error) {
       console.error(error);
-    })
+    });
   };
+});
+
+MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+  $scope.orders = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT t.id AS id, c.name AS name FROM Transactions t, Customers c WHERE categories = ? AND t.customer_id = c.id';
+    $cordovaSQLite.execute(db, query, ["O"]).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.orders.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).name});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
+
+  $scope.addOrder = function(ordersData) {
+    var transactQuery = 'INSERT INTO Transactions (categories, total_price, status, customer_id) VALUES (?, ?, ?, ?)';
+    var orderQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
+    $cordovaSQLite.execute(db, transactQuery, ["O", ordersData.total_price, "0", ordersData.customers]).then(function(tx) {
+      $cordovaSQLite.execute(db, orderQuery, [tx.insertId, ordersData.products, ordersData.amount]).then(function(res) {
+        console.log('Customer id ' + ordersData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
+      }, function(error) {
+      console.error(error);
+      });
+    });
+  };
+
+  $ionicModal.fromTemplateUrl('templates/add_order.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openOrderModal = function() {
+    $scope.modal.show();
+  };
+
+  $scope.closeOrderModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
 });
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
