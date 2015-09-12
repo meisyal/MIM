@@ -95,9 +95,34 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
 });
 
 MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+  $scope.customers = [];
+  $scope.products = [];
   $scope.orders = [];
   $ionicPlatform.ready(function() {
-    var query = 'SELECT t.id AS id, c.name AS name FROM Transactions t, Customers c WHERE categories = ? AND t.customer_id = c.id';
+    var customerQuery = 'SELECT id, name FROM Customers';
+    $cordovaSQLite.execute(db, customerQuery, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.customers.push({id: res.rows.item(i).id, customer_name: res.rows.item(i).name});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+
+    var productQuery = 'SELECT id, name FROM Products';
+    $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.products.push({id: res.rows.item(i).id, product_name: res.rows.item(i).name});
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+
+    var query = 'SELECT t.id AS id, c.name AS name FROM Transactions t, Customers c ' +
+      'WHERE categories = ? AND t.customer_id = c.id';
     $cordovaSQLite.execute(db, query, ["O"]).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
@@ -143,7 +168,8 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
   $scope.addProduct = function(productData) {
-    var query = 'INSERT INTO Products (name, description, remaining_amount, selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
+    var query = 'INSERT INTO Products (name, description, remaining_amount, ' +
+      'selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
     $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
       console.log('Item ' + res.insertId + ' is successfully inserted.');
     }, function(error) {
@@ -179,7 +205,10 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
 
 MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
-    var query = 'SELECT name, description, remaining_amount, selling_price, purchase_price, DATETIME(created_at, \'localtime\') AS created_date, DATETIME(updated_at, \'localtime\') AS updated_date FROM Products WHERE id = ?';
+    var query = 'SELECT name, description, remaining_amount, selling_price, ' +
+      'purchase_price, DATETIME(created_at, \'localtime\') AS created_date, ' +
+      'DATETIME(updated_at, \'localtime\') AS updated_date ' +
+      'FROM Products WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.itemId]).then(function(res) {
       if (res.rows.length) {
         $scope.product_name = res.rows.item(0).name;
@@ -253,7 +282,8 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
 
 MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
-    var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') AS joined_date FROM Customers WHERE id = ?';
+    var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') ' +
+      'AS joined_date FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
       if (res.rows.length) {
         $scope.customer_name = res.rows.item(0).name;
