@@ -134,14 +134,22 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
     });
   });
 
-  $scope.addOrder = function(ordersData) {
+  $scope.addOrder = function(ordersData, cus) {
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, status, customer_id) VALUES (?, ?, ?, ?)';
     var orderQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
+    var query = 'SELECT name FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, transactQuery, ["O", ordersData.total_price, "0", ordersData.customers]).then(function(tx) {
       $cordovaSQLite.execute(db, orderQuery, [tx.insertId, ordersData.products, ordersData.amount]).then(function(res) {
-        console.log('Customer id ' + ordersData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
-      }, function(error) {
-      console.error(error);
+        $cordovaSQLite.execute(db, query, [ordersData.customers]).then(function(res) {
+          if (res.rows.length) {
+            $scope.orders.push({id: tx.insertId, customer_name: res.rows.item(0).name});
+            ordersData.newItem = ' ';
+            $scope.closeOrderModal();
+            console.log('Customer id ' + ordersData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
+          }
+        }, function(error) {
+          console.error(error);
+        });
       });
     });
   };
@@ -164,6 +172,18 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
+
+  $scope.deleteOrder = function(order) {
+    var outerQuery = 'DELETE FROM Buying WHERE transaction_id = ?';
+    var innerQuery = 'DELETE FROM Transactions WHERE id = ?';
+    $cordovaSQLite.execute(db, outerQuery, [order.id]).then(function(res) {
+      $cordovaSQLite.execute(db, innerQuery, [order.id]).then(function(res) {
+        $scope.orders.splice($scope.orders.indexOf(order), 1);
+      });
+    }, function(error) {
+      console.error(error);
+    });
+  };
 });
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
