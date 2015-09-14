@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="order in orders" href="#">
+      <ion-item ng-repeat="order in orders" href="#/app/order-detail/{{ order.id }}">
         {{ order.customer_name }}
         <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteOrder(order)"></ion-option-button>
       </ion-item>

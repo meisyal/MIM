@@ -134,7 +134,7 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
     });
   });
 
-  $scope.addOrder = function(ordersData, cus) {
+  $scope.addOrder = function(ordersData) {
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, status, customer_id) VALUES (?, ?, ?, ?)';
     var orderQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
     var query = 'SELECT name FROM Customers WHERE id = ?';
@@ -184,6 +184,23 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
       console.error(error);
     });
   };
+});
+
+MIM.controller('OrderDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT p.name AS name, b.amount AS amount, t.total_price ' +
+      'AS total_price FROM Transactions t, Buying b, Products p WHERE ' +
+      't.id = b.transaction_id AND b.product_id = p.id AND t.id = ?';
+    $cordovaSQLite.execute(db, query, [$stateParams.orderId]).then(function(res) {
+      if (res.rows.length) {
+          $scope.product_name = res.rows.item(0).name;
+          $scope.order_amount = res.rows.item(0).amount;
+          $scope.order_price = res.rows.item(0).total_price;
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
 });
 
 MIM.controller('AddInventoryController', function($scope, $ionicPlatform, $cordovaSQLite) {
