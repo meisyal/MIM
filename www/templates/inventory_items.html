@@ -6,6 +6,7 @@
         <span class="badge badge-balanced">{{ item.product_amount }}</span>
         <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteItem(item)"></ion-option-button>
       </ion-item>
+      <ion-item ng-show="!inventory.length">No item :(</ion-item>
     </ion-list>
   </ion-content>
 </ion-view>

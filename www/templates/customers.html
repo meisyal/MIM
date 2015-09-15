@@ -8,6 +8,7 @@
         {{ customer.customer_name }}
         <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteCustomer(customer)"></ion-option-button>
       </ion-item>
+      <ion-item ng-show="!customers.length">No customer :(</ion-item>
     </ion-list>
   </ion-content>
 </ion-view>
