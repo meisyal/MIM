@@ -70,7 +70,8 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
     var buyQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
     $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function(tx) {
       $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function(res) {
-        console.log('Customer id ' + saleData.customers + ' and Transaction id ' + tx.insertId + ' are successfully inserted.');
+        console.log('Customer id ' + saleData.customers + ' and Transaction id ' +
+          tx.insertId + ' are successfully inserted.');
         $scope.getRemainingAmount(saleData.products, saleData.amount);
         $scope.updateProductAmount(saleData.products, saleData.amount);
       }, function(error) {
@@ -224,7 +225,7 @@ MIM.controller('OrderDetailController', function($scope, $ionicPlatform, $cordov
   });
 });
 
-MIM.controller('AddInventoryController', function($cordovaSQLite) {
+MIM.controller('AddInventoryController', function($scope, $cordovaSQLite) {
   $scope.addProduct = function(productData) {
     var query = 'INSERT INTO Products (name, description, remaining_amount, ' +
       'selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
@@ -352,10 +353,11 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
 
 MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
-    var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') ' +
+    var query = 'SELECT id, name, address, telephone_number, DATETIME(created_at, \'localtime\') ' +
       'AS joined_date FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
       if (res.rows.length) {
+        $scope.customer_id = res.rows.item(0).id;
         $scope.customer_name = res.rows.item(0).name;
         $scope.customer_address = res.rows.item(0).address;
         $scope.customer_phone = res.rows.item(0).telephone_number;
@@ -364,5 +366,33 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
     }, function(error) {
       console.error(error);
     });
+  });
+
+  $scope.editCustomer = function(customersData) {
+    var query = "UPDATE Customers SET name = ?, address = ?, telephone_number = ? WHERE id = ?";
+    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customer_id]).then(function(res) {
+      $scope.closeCustomerModal();
+      console.log('Item ' + customer_id + 'is edited successfully');
+    });
+  };
+
+  $ionicModal.fromTemplateUrl('templates/edit_customer.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openCustomerModal = function(customer_id) {
+    $scope.selectedId = customer_id;
+    $scope.modal.show();
+  };
+
+  $scope.closeCustomerModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
   });
 });
