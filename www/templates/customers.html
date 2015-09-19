@@ -1,12 +1,13 @@
 <ion-view title="Customers">
   <ion-nav-buttons side="right">
-    <button class="right button button-icon icon ion-plus" ng-click="openCustomerModal()"></button>
+    <button class="right button button-icon icon ion-android-add" ng-click="openCustomerModal(1)"></button>
   </ion-nav-buttons>
   <ion-content>
     <ion-list>
       <ion-item ng-repeat="customer in customers" href="#/app/customer-detail/{{ customer.id }}">
         {{ customer.customer_name }}
-        <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteCustomer(customer)"></ion-option-button>
+        <ion-option-button class="button-positive icon ion-android-create" ng-click="openCustomerModal(2, customer)"></ion-option-button>
+        <ion-option-button class="button-assertive icon ion-android-delete" ng-click="deleteCustomer(customer)"></ion-option-button>
       </ion-item>
       <ion-item ng-show="!customers.length">No customer :(</ion-item>
     </ion-list>

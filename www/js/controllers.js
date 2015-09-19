@@ -316,29 +316,69 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
         customer_phone: customersData.phone,
       });
       customersData.newItem = ' ';
-      $scope.closeCustomerModal();
+      $scope.closeCustomerModal(1);
+    }, function(error) {
+      console.error(error);
+    });
+  };
+
+  $scope.editCustomer = function(customersData) {
+    var query = 'UPDATE Customers SET name = ?, address = ?, telephone_number = ? WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customersData.id]).then(function(res) {
+      console.log('Item ' + customersData.id + ' is updated.');
+      customersData.newItem = ' ';
+      $scope.closeCustomerModal(2);
     }, function(error) {
       console.error(error);
     });
   };
 
   $ionicModal.fromTemplateUrl('templates/add_customer.html', {
+    id: '1',
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
-    $scope.modal = modal;
+    $scope.addModal = modal;
   });
 
-  $scope.openCustomerModal = function() {
-    $scope.modal.show();
+  $ionicModal.fromTemplateUrl('templates/edit_customer.html', {
+    id: '2',
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.editModal = modal;
+  });
+
+  $scope.openCustomerModal = function(index, customer) {
+    if (index == 1) {
+      $scope.addModal.show();
+    } else {
+      var query = 'SELECT name, address, telephone_number FROM Customers WHERE id = ?';
+      $cordovaSQLite.execute(db, query, [customer.id]).then(function(res) {
+        if (res.rows.length) {
+          $scope.customer_id = res.rows.item(0).id;
+          $scope.customer_name = res.rows.item(0).name;
+          $scope.customer_address = res.rows.item(0).address;
+          $scope.customer_phone = res.rows.item(0).telephone_number;
+        }
+      }, function(error) {
+        console.error(error);
+      });
+      $scope.editModal.show();
+    }
   };
 
-  $scope.closeCustomerModal = function() {
-    $scope.modal.hide();
+  $scope.closeCustomerModal = function(index) {
+    if (index == 1) {
+      $scope.addModal.hide();
+    } else {
+      $scope.editModal.hide();
+    }
   };
 
   $scope.$on('$destroy', function() {
-    $scope.modal.remove();
+    $scope.addModal.remove();
+    $scope.editModal.remove();
   });
 
   $scope.deleteCustomer = function(customer) {
@@ -354,13 +394,14 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
 MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
   $ionicPlatform.ready(function() {
     var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') ' +
-      'AS joined_date FROM Customers WHERE id = ?';
+      'AS joined_date, DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers WHERE id = ?';
     $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
       if (res.rows.length) {
         $scope.customer_name = res.rows.item(0).name;
         $scope.customer_address = res.rows.item(0).address;
         $scope.customer_phone = res.rows.item(0).telephone_number;
         $scope.customer_joined = res.rows.item(0).joined_date;
+        $scope.customer_updated = res.rows.item(0).updated_date;
       }
     }, function(error) {
       console.error(error);

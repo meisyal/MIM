@@ -2,7 +2,7 @@
   <ion-header-bar class="bar-dark">
     <h1 class="title">Edit Customer</h1>
     <div class="buttons">
-      <button class="button button-clear button-assertive" ng-click="">Close</button>
+      <button class="button button-clear button-assertive" ng-click="closeCustomerModal(2)">Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -10,15 +10,15 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Name</span>
-          <input type="text" value="{{ customer_name }}" ng-model="customersData.name">
+          <input type="text" ng-model="customersData.name">
         </label>
         <label class="item item-input">
           <span class="input-label">Address</span>
-          <input type="text" value="{{ customer_address }}"ng-model="customersData.address">
+          <input type="text" ng-model="customersData.address">
         </label>
         <label class="item item-input">
           <span class="input-label">Phone Number</span>
-          <input type="text" value="{{ customer_phone }}" ng-model="customersData.phone">
+          <input type="text" ng-model="customersData.phone">
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Edit</button>
