@@ -323,7 +323,8 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   };
 
   $scope.editCustomer = function(customersData) {
-    var query = 'UPDATE Customers SET name = ?, address = ?, telephone_number = ? WHERE id = ?';
+    var query = 'UPDATE Customers SET name = ?, address = ?, telephone_number = ?, ' +
+      'updated_at = DATETIME(\'now\') WHERE id = ?';
     $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customersData.id]).then(function(res) {
       console.log('Item ' + customersData.id + ' is updated.');
       customersData.newItem = ' ';
@@ -353,13 +354,14 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
     if (index == 1) {
       $scope.addModal.show();
     } else {
-      var query = 'SELECT name, address, telephone_number FROM Customers WHERE id = ?';
+      $scope.customersData = {};
+      var query = 'SELECT id, name, address, telephone_number FROM Customers WHERE id = ?';
       $cordovaSQLite.execute(db, query, [customer.id]).then(function(res) {
         if (res.rows.length) {
-          $scope.customer_id = res.rows.item(0).id;
-          $scope.customer_name = res.rows.item(0).name;
-          $scope.customer_address = res.rows.item(0).address;
-          $scope.customer_phone = res.rows.item(0).telephone_number;
+          $scope.customersData.id = res.rows.item(0).id;
+          $scope.customersData.name = res.rows.item(0).name;
+          $scope.customersData.address = res.rows.item(0).address;
+          $scope.customersData.phone = res.rows.item(0).telephone_number;
         }
       }, function(error) {
         console.error(error);
