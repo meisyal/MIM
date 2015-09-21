@@ -102,7 +102,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 });
 
-MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
   $scope.customers = [];
   $scope.products = [];
   $scope.orders = [];
@@ -196,14 +196,25 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
   });
 
   $scope.deleteOrder = function(order) {
-    var outerQuery = 'DELETE FROM Buying WHERE transaction_id = ?';
-    var innerQuery = 'DELETE FROM Transactions WHERE id = ?';
-    $cordovaSQLite.execute(db, outerQuery, [order.id]).then(function(res) {
-      $cordovaSQLite.execute(db, innerQuery, [order.id]).then(function(res) {
-        $scope.orders.splice($scope.orders.indexOf(order), 1);
-      });
-    }, function(error) {
-      console.error(error);
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete an Order',
+      template: 'Are you sure you want to delete this sale order?',
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        var outerQuery = 'DELETE FROM Buying WHERE transaction_id = ?';
+        var innerQuery = 'DELETE FROM Transactions WHERE id = ?';
+        $cordovaSQLite.execute(db, outerQuery, [order.id]).then(function(tx) {
+          $cordovaSQLite.execute(db, innerQuery, [order.id]).then(function(tx) {
+            $scope.orders.splice($scope.orders.indexOf(order), 1);
+          });
+        }, function(error) {
+          console.error(error);
+        });
+      } else {
+        console.log('You cancel deleting this sale order.');
+      }
     });
   };
 });
@@ -237,7 +248,7 @@ MIM.controller('AddInventoryController', function($scope, $cordovaSQLite) {
   };
 });
 
-MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite) {
+MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup) {
     $scope.inventory = [];
     $ionicPlatform.ready(function() {
       var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
@@ -257,11 +268,22 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
     });
 
     $scope.deleteItem = function(item) {
-      var query = 'DELETE FROM Products WHERE id = ?';
-      $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
-        $scope.inventory.splice($scope.inventory.indexOf(item), 1);
-      }, function(error) {
-        console.error(error);
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete an Item',
+        template: 'Are you sure you want to delete this item?',
+      });
+
+      confirmPopup.then(function(res) {
+        if (res) {
+          var query = 'DELETE FROM Products WHERE id = ?';
+          $cordovaSQLite.execute(db, query, [item.id]).then(function(tx) {
+            $scope.inventory.splice($scope.inventory.indexOf(item), 1);
+          }, function(error) {
+            console.error(error);
+          });
+        } else {
+          console.log('You cancel deleting this item.');
+        }
       });
     };
 });
@@ -288,7 +310,7 @@ MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal) {
+MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
   $scope.customers = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT id, name FROM Customers';
@@ -384,11 +406,22 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   });
 
   $scope.deleteCustomer = function(customer) {
-    var query = 'DELETE FROM Customers WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [customer.id]).then(function() {
-      $scope.customers.splice($scope.customers.indexOf(customer), 1);
-    }, function(error) {
-      console.error(error);
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete Customer',
+      template: 'Are you sure you want to delete this customer?',
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        var query = 'DELETE FROM Customers WHERE id = ?';
+        $cordovaSQLite.execute(db, query, [customer.id]).then(function(tx) {
+          $scope.customers.splice($scope.customers.indexOf(customer), 1);
+        }, function(error) {
+          console.error(error);
+        });
+      } else {
+        console.log('You cancel deleting this customer.');
+      }
     });
   };
 });
