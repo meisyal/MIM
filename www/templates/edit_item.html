@@ -1,0 +1,37 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">Edit Item</h1>
+    <div class="buttons">
+      <button class="button button-icon icon ion-android-close" ng-click="closeItemModal()"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="editItem(productData)">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Name</span>
+          <input type="text" ng-model="productData.name" />
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Description</span>
+          <input type="text" ng-model="productData.description" />
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Amount</span>
+          <input type="text" ng-model="productData.amount" />
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Purchase Price (US$)</span>
+          <input type="text" ng-model="productData.purchase_price" />
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Selling Price (US$)</span>
+          <input type="text" ng-model="productData.selling_price" />
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Edit</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

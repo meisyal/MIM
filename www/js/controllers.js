@@ -11,23 +11,25 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
     disableBack: true
   });
   $ionicPlatform.ready(function() {
-    $ionicLoading.show({ template: 'Loading...' });
-      if (window.cordova) {
-        window.plugins.sqlDB.copy('MIM.db', 0, function() {
-          db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
-          $ionicLoading.hide();
-          $location.path('/app/customer');
-        }, function(error) {
-          console.error('There was an error copying the database: ' + error);
-          db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
-          $ionicLoading.hide();
-          $location.path('/app/customer');
-        });
-      } else {
-        console.log('You are using browser to test and run the app.');
-        console.log('WebSQL has been deprecated http://dev.w3.org/html5/webdatabase/');
-        console.log('Please, use the mobile device or emulator instead of browser.');
-      }
+    $ionicLoading.show({
+      template: 'Loading...',
+    });
+    if (window.cordova) {
+      window.plugins.sqlDB.copy('MIM.db', 0, function() {
+        db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
+        $ionicLoading.hide();
+        $location.path('/app/customer');
+      }, function(error) {
+        console.error('There was an error copying the database: ' + error);
+        db = window.sqlitePlugin.openDatabase({name: 'MIM.db'});
+        $ionicLoading.hide();
+        $location.path('/app/customer');
+      });
+    } else {
+      console.log('You are using browser to test and run the app.');
+      console.log('WebSQL has been deprecated http://dev.w3.org/html5/webdatabase/');
+      console.log('Please, use the mobile device or emulator instead of browser.');
+    }
   });
 });
 
@@ -248,44 +250,90 @@ MIM.controller('AddInventoryController', function($scope, $cordovaSQLite) {
   };
 });
 
-MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup) {
-    $scope.inventory = [];
-    $ionicPlatform.ready(function() {
-      var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
-      $cordovaSQLite.execute(db, query, []).then(function(res) {
-        if (res.rows.length) {
-          for (var i = 0; i < res.rows.length; i++) {
-            $scope.inventory.push({
-              id: res.rows.item(i).id,
-              product_name: res.rows.item(i).name,
-              product_amount: res.rows.item(i).remaining_amount,
-            });
-          }
+MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
+  $scope.inventory = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
+    $cordovaSQLite.execute(db, query, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.inventory.push({
+            id: res.rows.item(i).id,
+            product_name: res.rows.item(i).name,
+            product_amount: res.rows.item(i).remaining_amount,
+          });
         }
-      }, function(error) {
-        console.error(error);
-      });
+      }
+    }, function(error) {
+      console.error(error);
+    });
+  });
+
+  $scope.editItem = function(productData) {
+    var query = 'UPDATE Products SET name = ?, description = ?, remaining_amount = ?, ' +
+      'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.remaining_amount, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
+      console.log('Item ' + productData.id + ' is updated.');
+      productData.newItem = ' ';
+      $scope.closeItemModal();
+    }, function(error) {
+      console.error(error);
+    });
+  };
+
+  $ionicModal.fromTemplateUrl('templates/edit_item.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openItemModal = function(item) {
+    $scope.productData = {};
+    var query = 'SELECT id, name, description, remaining_amount, selling_price, ' +
+      'purchase_price FROM Products WHERE id = ?';
+    $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
+      if (res.rows.length) {
+        $scope.productData.id = res.rows.item(0).id;
+        $scope.productData.name = res.rows.item(0).name;
+        $scope.productData.description = res.rows.item(0).description;
+        $scope.productData.amount = res.rows.item(0).remaining_amount;
+        $scope.productData.purchase_price = res.rows.item(0).purchase_price;
+        $scope.productData.selling_price = res.rows.item(0).selling_price;
+      }
+    }, function(error) {
+      console.error(error);
+    });
+    $scope.modal.show();
+  };
+
+  $scope.closeItemModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+  $scope.deleteItem = function(item) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete an Item',
+      template: 'Are you sure you want to delete this item?',
     });
 
-    $scope.deleteItem = function(item) {
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Delete an Item',
-        template: 'Are you sure you want to delete this item?',
-      });
-
-      confirmPopup.then(function(res) {
-        if (res) {
-          var query = 'DELETE FROM Products WHERE id = ?';
-          $cordovaSQLite.execute(db, query, [item.id]).then(function(tx) {
-            $scope.inventory.splice($scope.inventory.indexOf(item), 1);
-          }, function(error) {
-            console.error(error);
-          });
-        } else {
-          console.log('You cancel deleting this item.');
-        }
-      });
-    };
+    confirmPopup.then(function(res) {
+      if (res) {
+        var query = 'DELETE FROM Products WHERE id = ?';
+        $cordovaSQLite.execute(db, query, [item.id]).then(function(tx) {
+          $scope.inventory.splice($scope.inventory.indexOf(item), 1);
+        }, function(error) {
+          console.error(error);
+        });
+      } else {
+        console.log('You cancel deleting this item.');
+      }
+    });
+  };
 });
 
 MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
