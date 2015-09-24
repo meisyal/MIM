@@ -6,30 +6,30 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="addOrder(ordersData)">
+    <form name="addorder" ng-submit="addOrder(ordersData)">
       <div class="list">
         <label class="item item-input item-select">
           <span class="input-label">Customer Name</span>
-          <select name="customers" ng-model="ordersData.customers" ng-options="customer.id as customer.customer_name for customer in customers">
+          <select name="customers" ng-model="ordersData.customers" ng-options="customer.id as customer.customer_name for customer in customers" required>
             <option value="">Choose customer</option>
           </select>
         </label>
         <label class="item item-input item-select">
           <span class="input-label">Product Name</span>
-          <select name="products" ng-model="ordersData.products" ng-options="product.id as product.product_name for product in products">
+          <select name="products" ng-model="ordersData.products" ng-options="product.id as product.product_name for product in products" required>
             <option value="">Choose item</option>
           </select>
         </label>
         <label class="item item-input">
           <span class="input-label">Amount</span>
-          <input type="text" placeholder="2" ng-model="ordersData.amount" />
+          <input type="text" placeholder="2" ng-model="ordersData.amount" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Total Price (US$)</span>
-          <input type="text" placeholder="49.99" ng-model="ordersData.total_price" />
+          <input type="text" placeholder="49.99" ng-model="ordersData.total_price" required />
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Add</button>
+          <button class="button button-block button-positive" type="submit" ng-disabled="addorder.$invalid">Add</button>
         </label>
       </div>
     </form>

@@ -6,30 +6,30 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="editItem(productData)">
+    <form name="edititem" ng-submit="editItem(productData)">
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Name</span>
-          <input type="text" ng-model="productData.name" />
+          <input type="text" ng-model="productData.name" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Description</span>
-          <input type="text" ng-model="productData.description" />
+          <input type="text" ng-model="productData.description" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Amount</span>
-          <input type="text" ng-model="productData.amount" />
+          <input type="text" ng-model="productData.amount" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Purchase Price (US$)</span>
-          <input type="text" ng-model="productData.purchase_price" />
+          <input type="text" ng-model="productData.purchase_price" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Selling Price (US$)</span>
-          <input type="text" ng-model="productData.selling_price" />
+          <input type="text" ng-model="productData.selling_price" required />
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Edit</button>
+          <button class="button button-block button-positive" type="submit" ng-disabled="edititem.$invalid">Edit</button>
         </label>
       </div>
     </form>

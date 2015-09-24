@@ -1,29 +1,29 @@
 <ion-view title="Add a Product">
   <ion-content>
-    <form ng-submit="addProduct(productData)">
+    <form name="addinventory" ng-submit="addProduct(productData)">
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Name</span>
-          <input type="text" placeholder="Five Star Spiral Notebook" ng-model="productData.name" />
+          <input type="text" placeholder="Five Star Spiral Notebook" ng-model="productData.name" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Description</span>
-          <input type="text" placeholder="Keep all your notes organized and secure in this durable" ng-model="productData.description" />
+          <input type="text" placeholder="Keep all your notes organized and secure in this durable" ng-model="productData.description" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Amount</span>
-          <input type="text" placeholder="3" ng-model="productData.amount" />
+          <input type="text" placeholder="3" ng-model="productData.amount" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Purchase Price (US$)</span>
-          <input type="text" placeholder="25.99" ng-model="productData.purchase_price" />
+          <input type="text" placeholder="25.99" ng-model="productData.purchase_price" required />
         </label>
         <label class="item item-input">
           <span class="input-label">Selling Price (US$)</span>
-          <input type="text" placeholder="29.99" ng-model="productData.selling_price" />
+          <input type="text" placeholder="29.99" ng-model="productData.selling_price" required />
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Add</button>
+          <button class="button button-block button-positive" type="submit" ng-disabled="addinventory.$invalid">Add</button>
         </label>
       </div>
     </form>
