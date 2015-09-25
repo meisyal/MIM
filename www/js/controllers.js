@@ -33,7 +33,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
   });
 });
 
-MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite) {
+MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup) {
   $scope.customers = [];
   $scope.products = [];
   $ionicPlatform.ready(function() {
@@ -76,6 +76,8 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
           tx.insertId + ' are successfully inserted.');
         $scope.getRemainingAmount(saleData.products, saleData.amount);
         $scope.updateProductAmount(saleData.products, saleData.amount);
+        $scope.showAlert();
+        saleData.newItem = '';
       }, function(error) {
       console.error(error);
       });
@@ -100,6 +102,16 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
       console.log('one row is affected');
     }, function(error) {
       console.error(error);
+    });
+  };
+
+  $scope.showAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Success',
+      template: 'A new transaction has been added',
+    });
+    alertPopup.then(function(res) {
+      console.log('Transaction is successfully added.');
     });
   };
 });
@@ -166,7 +178,7 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
               id: tx.insertId,
               customer_name: res.rows.item(0).name,
             });
-            ordersData.newItem = ' ';
+            ordersData.newItem = '';
             $scope.closeOrderModal();
             console.log('Customer id ' + ordersData.customers + ' and ' +
               'Transaction id ' + tx.insertId + ' are successfully inserted.');
@@ -238,14 +250,26 @@ MIM.controller('OrderDetailController', function($scope, $ionicPlatform, $cordov
   });
 });
 
-MIM.controller('AddInventoryController', function($scope, $cordovaSQLite) {
+MIM.controller('AddInventoryController', function($scope, $cordovaSQLite, $ionicPopup) {
   $scope.addProduct = function(productData) {
     var query = 'INSERT INTO Products (name, description, remaining_amount, ' +
       'selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
     $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
       console.log('Item ' + res.insertId + ' is successfully inserted.');
+      $scope.showAlert();
+      productData.newItem = '';
     }, function(error) {
       console.error(error);
+    });
+  };
+
+  $scope.showAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Success',
+      template: 'A new item has been added',
+    });
+    alertPopup.then(function(res) {
+      console.log('Item is successfully inserted.');
     });
   };
 });
@@ -274,7 +298,7 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
       'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') WHERE id = ?';
     $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.remaining_amount, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
       console.log('Item ' + productData.id + ' is updated.');
-      productData.newItem = ' ';
+      productData.newItem = '';
       $scope.closeItemModal();
     }, function(error) {
       console.error(error);
@@ -385,7 +409,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
         customer_address: customersData.address,
         customer_phone: customersData.phone,
       });
-      customersData.newItem = ' ';
+      customersData.newItem = '';
       $scope.closeCustomerModal(1);
     }, function(error) {
       console.error(error);
@@ -397,7 +421,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
       'updated_at = DATETIME(\'now\') WHERE id = ?';
     $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customersData.id]).then(function(res) {
       console.log('Item ' + customersData.id + ' is updated.');
-      customersData.newItem = ' ';
+      customersData.newItem = '';
       $scope.closeCustomerModal(2);
     }, function(error) {
       console.error(error);
