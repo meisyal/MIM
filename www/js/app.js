@@ -106,6 +106,15 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
           controller: 'CustomerDetailController'
         }
       }
+    })
+    .state('app.statistics', {
+      url: '/statistics',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/statistics.html',
+          controller: 'StatisticsController'
+        }
+      }
     });
     $urlRouterProvider.otherwise('/app/config');
 });

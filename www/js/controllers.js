@@ -1,4 +1,4 @@
-var MIM = angular.module('starter.controllers', ['ngCordova']);
+var MIM = angular.module('starter.controllers', ['ngCordova', 'chart.js']);
 var db = null;
 
 MIM.controller('AppController', function($location) {
@@ -514,4 +514,13 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
       console.error(error);
     });
   });
+});
+
+MIM.controller('StatisticsController', function($scope) {
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+  $scope.series = ['Series A', 'Series B'];
+  $scope.data = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
 });
