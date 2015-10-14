@@ -294,9 +294,9 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
   });
 
   $scope.editItem = function(productData) {
-    var query = 'UPDATE Products SET name = ?, description = ?, remaining_amount = ?, ' +
+    var query = 'UPDATE Products SET name = ?, description = ?, ' +
       'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.remaining_amount, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
       console.log('Item ' + productData.id + ' is updated.');
       productData.newItem = '';
       $scope.closeItemModal();
