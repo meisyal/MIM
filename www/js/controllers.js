@@ -516,11 +516,25 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
   });
 });
 
-MIM.controller('StatisticsController', function($scope) {
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
+MIM.controller('StatisticsController', function($scope, $ionicPlatform, $cordovaSQLite) {
+  $scope.month = [];
+  $scope.monthly_transaction = [];
+  $scope.series = ["bulan ke-"];
+  $scope.count = [];
+  $ionicPlatform.ready(function() {
+    var query = 'SELECT strftime(\'%m\', date) AS month, COUNT(id) AS total_transaction ' +
+      'FROM Transactions GROUP BY month';
+    $cordovaSQLite.execute(db, query, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.month.push(res.rows.item(i).month);
+          $scope.count.push(res.rows.item(i).total_transaction);
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+
+    $scope.monthly_transaction.push($scope.count);
+  });
 });
