@@ -519,7 +519,7 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
 MIM.controller('StatisticsController', function($scope, $ionicPlatform, $cordovaSQLite) {
   $scope.month = [];
   $scope.monthly_transaction = [];
-  $scope.series = ["bulan ke-"];
+  $scope.series = ["month"];
   $scope.count = [];
   $ionicPlatform.ready(function() {
     var query = 'SELECT strftime(\'%m\', date) AS month, COUNT(id) AS total_transaction ' +
