@@ -517,17 +517,17 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
 });
 
 MIM.controller('StatisticsController', function($scope, $ionicPlatform, $cordovaSQLite) {
-  $scope.month = [];
+  $scope.month_year = [];
   $scope.monthly_transaction = [];
-  $scope.series = ["month"];
+  $scope.series = ["month-year"];
   $scope.count = [];
   $ionicPlatform.ready(function() {
-    var query = 'SELECT strftime(\'%m\', date) AS month, COUNT(id) AS total_transaction ' +
-      'FROM Transactions GROUP BY month';
+    var query = 'SELECT strftime(\'%m-%Y\', date) AS month_year, COUNT(id) AS total_transaction ' +
+      'FROM Transactions GROUP BY month_year';
     $cordovaSQLite.execute(db, query, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.month.push(res.rows.item(i).month);
+          $scope.month_year.push(res.rows.item(i).month_year);
           $scope.count.push(res.rows.item(i).total_transaction);
         }
       }
