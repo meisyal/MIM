@@ -516,11 +516,41 @@ MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cor
   });
 });
 
-MIM.controller('StatisticsController', function($scope) {
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
+MIM.controller('StatisticsController', function($scope, $ionicPlatform, $cordovaSQLite) {
+  $scope.month_year = [];
+  $scope.monthly_transaction = [];
+  $scope.monthly_income = [];
+  $scope.series = ["month-year"];
+  $scope.count = [];
+  $scope.total_price = [];
+  $ionicPlatform.ready(function() {
+    var transactionQuery = 'SELECT strftime(\'%m-%Y\', date) AS month_year, COUNT(id) AS total_transaction ' +
+      'FROM Transactions GROUP BY month_year';
+    $cordovaSQLite.execute(db, transactionQuery, []).then(function(res) {
+      if (res.rows.length) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.month_year.push(res.rows.item(i).month_year);
+          $scope.count.push(res.rows.item(i).total_transaction);
+        }
+      }
+    }, function(error) {
+      console.error(error);
+    });
+
+    $scope.monthly_transaction.push($scope.count);
+
+    var incomeQuery = 'SELECT strftime(\'%m-%Y\', date) AS month_year, SUM(total_price) AS total_price ' +
+      'FROM Transactions GROUP BY month_year';
+      $cordovaSQLite.execute(db, incomeQuery, []).then(function(res) {
+        if (res.rows.length) {
+          for (var i = 0; i < res.rows.length; i++) {
+            $scope.total_price.push(res.rows.item(i).total_price);
+          }
+        }
+      }, function(error) {
+        console.error(error);
+      });
+
+      $scope.monthly_income.push($scope.total_price);
+  });
 });
