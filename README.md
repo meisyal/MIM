@@ -6,26 +6,26 @@ MIM stands for **M**obile **I**nventory **M**anager.
 designed to help a shopkeeper to manage his/her small shop inventory. A shopkeeper
 usually takes inventory activities into a notebook. We looked it is so hard to
 handle some cases: knowing the number of item in inventory or reporting monthly
-statistic into a chart, for example. This is a motivation why we build MIM
-(short version). We hope MIM is not only helping a shopkeeper make a decision
-he/she should take but also growing his/her business.
+statistic into a chart, for example. This is a motivation why we build MIM. We
+hope MIM is not only helping a shopkeeper make a decision he/she should take
+but also growing his/her business.
 
 This project originally came from [natsumiaya][natsumiaya]. We collaborated in a
-team to develop this project. But, it got stuck in the middle 2015. I don't want
-to leave it. I am eager to continue this project.
+team to develop this project. But, it got stuck in the middle 2015 because some
+reasons. I am eager to continue this project.
 
 ## Installation
 
 If you want to build and/or test yourself while this project is under development,
 make sure you have passed following the requirements.
 
-Note: I run this project on **Ubuntu** operating system. So, you have to adjust
-the environment for development.
+Note: I run and test this project on **Ubuntu** operating system. So, you have
+to adjust the environment for development.
 
 ### Requirements
 
-You have to install **[node.js][nodejs] or [io.js][iojs]** (I would recommend
-  node.js **v0.12.x**/io.js **v3.2.x** or any latest version).
+You have to install **[node.js][nodejs]** (I would recommend node.js **v0.12.x**
+or any latest version).
 
 After that, don't forget to install [SQLite][sqlite].
 
@@ -40,6 +40,17 @@ will provide the database schema soon.
 ```bash
 $ sqlite3 MIM.db
 ```
+
+### Dependencies
+
+Dependencies are used in this project:
+- [Cordova SQLite Storage][sqlite-storage]
+- [SQLite dbcopy][sqlite-dbcopy]
+
+Please, read theirs documentation about how to install two plugins above into
+your `ionic` project before you start moving forward.
+
+MIM uses [Angular Chart][angularchart] to generate chart.
 
 ### Building from Source
 
@@ -70,20 +81,13 @@ If you have passed the requirements above, now, you can follow the steps below:
    $ ionic platform add android
    ```
 
-5. Beside that, this project requires two Cordova plugins:
-   - [Cordova SQLite Storage][sqlite-storage]
-   - [SQLite dbcopy][sqlite-dbcopy]
-
-   Please, read theirs documentation about how to install two plugins above into
-   your `ionic` project before you start moving forward.
-
-6. Build the source code until you get success message.
+5. Build the source code until you get success message.
 
    ```bash
    $ ionic build android
    ```
 
-7. You can either emulate or install the `.apk` file.
+6. You can either emulate or install the `.apk` file in your device.
 
    ```bash
    $ ionic emulate android
@@ -95,29 +99,31 @@ Currently, this project is being developed and maintained by [meisyal][meisyal].
 There are still many requirements that have not been finished yet. Documentation
 is not available for now.
 
-If you face any problems or have something to say, feel free to contact me or
-submit an [issue][issue]. Your responses are very welcome.
+If you face any problems or find a bug, feel free to submit an [issue][issue] or
+[pull request][pr]. Your contributions are very welcome.
 
 ## License
 
-This project is under GNU General Public License Version 3. Please, check
-[LICENSE][license] for more information.
+This project is released under GNU General Public License Version 3. Please, check
+[LICENSE][license] for more information. All other contents (dependencies etc.)
+are redistributed under their original license terms.
 
 The side menu icons (add-inventory.svg, customers.svg, inventory-item.svg,
 sales-order.svg, sales.svg, and statistic.svg) were created by
 [natsumiaya][natsumiaya]. Its **copyright** is addressed to her. You can find
-the side menu icons [here][sidemenu-icon].
+these side menu icons [here][sidemenu-icon].
 
 [natsumiaya]: https://github.com/natsumiaya
 [nodejs]: https://nodejs.org/
-[iojs]: https://iojs.org/
 [sqlite]: http://sqlite.org/
 [sqlite-storage]:  https://github.com/litehelpers/Cordova-sqlite-storage
 [sqlite-dbcopy]: https://github.com/an-rahulpandey/cordova-plugin-dbcopy
+[angularchart]: http://jtblin.github.io/angular-chart.js/
 [cordova]: https://cordova.apache.org/
 [ionic]: http://ionicframework.com/
 [download]: https://github.com/meisyal/MIM/archive/master.zip
 [meisyal]: https://github.com/meisyal
 [issue]: https://github.com/meisyal/MIM/issues
+[pr]: https://github.com/meisyal/MIM/pulls
 [license]: https://github.com/meisyal/MIM/blob/master/LICENSE
 [sidemenu-icon]: https://github.com/meisyal/MIM/tree/master/www/img
