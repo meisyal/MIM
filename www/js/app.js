@@ -45,6 +45,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       }
     })
     .state('app.salesorder', {
+      cache: false,
       url: '/sales-order',
       views: {
         'menuContent': {
