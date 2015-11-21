@@ -51,7 +51,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
       console.error(error);
     });
 
-    var productQuery = 'SELECT id, name FROM Products';
+    var productQuery = 'SELECT id, name FROM Products WHERE remaining_amount > 0';
     $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
       if (res.rows.length) {
         for (var i = 0; i < res.rows.length; i++) {
