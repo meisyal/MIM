@@ -24,21 +24,14 @@ to adjust the environment for development.
 
 ### Requirements
 
-You have to install **[node.js][nodejs]** (I would recommend node.js **v0.12.x**
-or any latest version).
+You have to install **[node.js][nodejs]**. I would recommend node.js **v0.12.x**
+or any latest version.
 
 After that, don't forget to install [SQLite][sqlite].
 
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install sqlite3 libsqlite3-dev
-```
-
-Make a database along with tables, you can give a name, `MIM.db`, for example. I
-will provide the database schema soon.
-
-```bash
-$ sqlite3 MIM.db
 ```
 
 ### Dependencies
@@ -50,7 +43,7 @@ Dependencies are used in this project:
 Please, read theirs documentation about how to install two plugins above into
 your `ionic` project before you start moving forward.
 
-MIM uses [Angular Chart][angularchart] to generate chart.
+MIM also uses [Angular Chart][angularchart] to generate chart.
 
 ### Building from Source
 
@@ -72,22 +65,31 @@ If you have passed the requirements above, now, you can follow the steps below:
    ```
 
 3. Download the [latest][download] `.zip` version of this project and put them
-   into your project directory (replacing `www`
-   folder and some files, like `config.xml`).
+   into your project directory (replacing some files on root and `www`
+   folders).
 4. Add Android platform into your ionic project, for example.
 
    ```bash
    $ cd MIM
    $ ionic platform add android
    ```
+5. Make a database along with tables, you can give a name, `MIM.db`, for example.
+   Database schema is available in a plain text [MIM.txt][schema].
 
-5. Build the source code until you get success message.
+  ```bash
+  $ cd www/
+  $ cat MIM.txt | sqlite3 MIM.db
+  ```
+
+6. Back to root folder of your project and build the source code until you get
+   success message.
 
    ```bash
+   $ cd ../
    $ ionic build android
    ```
 
-6. You can either emulate or install the `.apk` file in your device.
+7. You can either emulate or install the `.apk` file in your device.
 
    ```bash
    $ ionic emulate android
@@ -116,6 +118,7 @@ these side menu icons [here][sidemenu-icon].
 [natsumiaya]: https://github.com/natsumiaya
 [nodejs]: https://nodejs.org/
 [sqlite]: http://sqlite.org/
+[schema]: https://github.com/meisyal/MIM/blob/dev/www/MIM.txt
 [sqlite-storage]:  https://github.com/litehelpers/Cordova-sqlite-storage
 [sqlite-dbcopy]: https://github.com/an-rahulpandey/cordova-plugin-dbcopy
 [angularchart]: http://jtblin.github.io/angular-chart.js/
