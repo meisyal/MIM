@@ -1,0 +1,7 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Products (id integer primary key, name varchar(30), description varchar(100), remaining_amount integer, selling_price NUMERIC, purchase_price NUMERIC, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE Customers (id integer primary key, name varchar(50), address varchar(100), telephone_number varchar(12), created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE Transactions (id integer primary key, date DATETIME DEFAULT CURRENT_TIMESTAMP, categories CHAR(1), total_price NUMERIC, status CHAR(1), customer_id integer, FOREIGN KEY(customer_id) REFERENCES Customers(id));
+CREATE TABLE Buying (transaction_id integer, product_id integer, amount integer, FOREIGN KEY(transaction_id) REFERENCES Transactions(id), FOREIGN KEY(product_id) REFERENCES Products(id));
+COMMIT;
