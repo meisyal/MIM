@@ -118,7 +118,7 @@ these side menu icons [here][sidemenu-icon].
 [natsumiaya]: https://github.com/natsumiaya
 [nodejs]: https://nodejs.org/
 [sqlite]: http://sqlite.org/
-[schema]: https://github.com/meisyal/MIM/blob/dev/www/MIM.txt
+[schema]: https://github.com/meisyal/MIM/blob/master/www/MIM.txt
 [sqlite-storage]:  https://github.com/litehelpers/Cordova-sqlite-storage
 [sqlite-dbcopy]: https://github.com/an-rahulpandey/cordova-plugin-dbcopy
 [angularchart]: http://jtblin.github.io/angular-chart.js/
