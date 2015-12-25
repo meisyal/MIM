@@ -41,9 +41,10 @@ Dependencies are used in this project:
 - [SQLite dbcopy][sqlite-dbcopy]
 
 Please, read theirs documentation about how to install two plugins above into
-your `ionic` project before you start moving forward.
-
-MIM also uses [Angular Chart][angularchart] to generate chart.
+your `ionic` project before you start moving forward. MIM also uses
+[Angular Chart][angularchart] to generate chart. There are some associated files
+with this one. Those files are Chart.min.js, angular-chart.min.js, and angular-
+chart.css.
 
 ### Building from Source
 
@@ -107,8 +108,8 @@ If you face any problems or find a bug, feel free to submit an [issue][issue] or
 ## License
 
 This project is released under GNU General Public License Version 3. Please, check
-[LICENSE][license] for more information. All other contents (dependencies etc.)
-are redistributed under their original license terms.
+[LICENSE][license] for more information. All other contents (dependencies and
+etc.) are redistributed under their original license terms.
 
 The side menu icons (add-inventory.svg, customers.svg, inventory-item.svg,
 sales-order.svg, sales.svg, and statistic.svg) were created by
