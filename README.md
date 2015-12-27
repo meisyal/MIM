@@ -3,7 +3,7 @@
 MIM stands for **M**obile **I**nventory **M**anager.
 
 **MIM** is a mobile phone application for a shopkeeper. This application is
-designed to help a shopkeeper to manage his/her small shop inventory. A shopkeeper
+designed to help a shopkeeper to manage his small shop inventory. A shopkeeper
 usually takes inventory activities into a notebook. We looked it is so hard to
 handle some cases: knowing the number of item in inventory or reporting monthly
 statistic into a chart, for example. This is a motivation why we build MIM. We
@@ -57,33 +57,33 @@ If you have passed the requirements above, now, you can follow the steps below:
    $ npm install -g cordova ionic
    ```
 
-2. Create a blank start Ionic project in folder/location where you want and then
-   change directory into your project name, MIM,
-   in this case.
+2. Create a blank start Ionic project in folder where you want and then
+   change directory into your project name, MIM, in this case.
 
    ```bash
    $ ionic start MIM blank
    ```
 
-3. Download the [latest][download] `.zip` version of this project and put them
-   into your project directory (replacing some files on root and `www`
-   folders).
+3. Download the [latest][download] `.zip` version of this project and extract
+   them into your project directory (it will replace some files and `www`
+   folder on your project directory).
 4. Add Android platform into your ionic project, for example.
 
    ```bash
    $ cd MIM
    $ ionic platform add android
    ```
+
 5. Make a database along with tables, you can give a name, `MIM.db`, for example.
-   Database schema is available in a plain text [MIM.txt][schema].
+   Database schema is available in [MIM.txt][schema] file.
 
   ```bash
   $ cd www/
   $ cat MIM.txt | sqlite3 MIM.db
   ```
 
-6. Back to root folder of your project and build the source code until you get
-   success message.
+6. Back to root folder of your project directory and build the source code until
+   you get success message.
 
    ```bash
    $ cd ../
@@ -99,8 +99,7 @@ If you have passed the requirements above, now, you can follow the steps below:
 ## Status
 
 Currently, this project is being developed and maintained by [meisyal][meisyal].
-There are still many requirements that have not been finished yet. Documentation
-is not available for now.
+The application is ready for testing. Documentation is not available for now.
 
 If you face any problems or find a bug, feel free to submit an [issue][issue] or
 [pull request][pr]. Your contributions are very welcome.
