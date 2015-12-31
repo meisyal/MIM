@@ -446,6 +446,7 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
 
   $scope.openCustomerModal = function(index, customer) {
     if (index == 1) {
+      $scope.customersData = {};
       $scope.addModal.show();
     } else {
       $scope.customersData = {};
