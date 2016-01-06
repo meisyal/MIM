@@ -1,4 +1,6 @@
-var MIM = angular.module('starter.controllers', ['ngCordova', 'chart.js']);
+var MIM = angular.module('starter.controllers', ['starter.services',
+                                                 'ngCordova',
+                                                 'chart.js']);
 var db = null;
 
 MIM.controller('AppController', function($location) {
@@ -382,22 +384,11 @@ MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
+MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup, Customer) {
   $scope.customers = [];
-  $ionicPlatform.ready(function() {
-    var query = 'SELECT id, name FROM Customers';
-    $cordovaSQLite.execute(db, query, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.customers.push({
-            id: res.rows.item(i).id,
-            customer_name: res.rows.item(i).name,
-          });
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
+
+  Customer.all().then(function(customers) {
+    $scope.customers = customers;
   });
 
   $scope.addCustomer = function(customersData) {

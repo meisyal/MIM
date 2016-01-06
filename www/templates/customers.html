@@ -5,7 +5,7 @@
   <ion-content>
     <ion-list>
       <ion-item ng-repeat="customer in customers" href="#/app/customer-detail/{{ customer.id }}">
-        {{ customer.customer_name }}
+        {{ customer.name }}
         <ion-option-button class="button-positive icon ion-android-create" ng-click="openCustomerModal(2, customer)"></ion-option-button>
         <ion-option-button class="button-assertive icon ion-android-delete" ng-click="deleteCustomer(customer)"></ion-option-button>
       </ion-item>

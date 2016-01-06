@@ -41,3 +41,13 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
 
   return this;
 });
+
+MIM.factory('Customer', function($cordovaSQLite, DB) {
+  this.all = function() {
+    return DB.queryStatement("SELECT id, name FROM Customers").then(function(res) {
+      return DB.getAll(res);
+    });
+  }
+
+  return this;
+});
