@@ -4,7 +4,7 @@
       <div class="list">
         <label class="item item-input item-select">
           <span class="input-label">Customer Name</span>
-          <select name="customers" ng-model="saleData.customers" ng-options="customer.id as customer.customer_name for customer in customers" required>
+          <select name="customers" ng-model="saleData.customers" ng-options="customer.id as customer.name for customer in customers" required>
             <option value="">Choose customer</option>
           </select>
         </label>
