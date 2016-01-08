@@ -37,7 +37,7 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
     }
 
     return output;
-  }
+  };
 
   return this;
 });
@@ -47,7 +47,17 @@ MIM.factory('Customer', function($cordovaSQLite, DB) {
     return DB.queryStatement("SELECT id, name FROM Customers").then(function(res) {
       return DB.getAll(res);
     });
-  }
+  };
+
+  return this;
+});
+
+MIM.factory('Product', function($cordovaSQLite, DB) {
+  this.all = function() {
+    return DB.queryStatement("SELECT id, name FROM Products").then(function(res) {
+      return DB.getAll(res);
+    });
+  };
 
   return this;
 });

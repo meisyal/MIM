@@ -10,13 +10,13 @@
       <div class="list">
         <label class="item item-input item-select">
           <span class="input-label">Customer Name</span>
-          <select name="customers" ng-model="ordersData.customers" ng-options="customer.id as customer.customer_name for customer in customers" required>
+          <select name="customers" ng-model="ordersData.customers" ng-options="customer.id as customer.name for customer in customers" required>
             <option value="">Choose customer</option>
           </select>
         </label>
         <label class="item item-input item-select">
           <span class="input-label">Product Name</span>
-          <select name="products" ng-model="ordersData.products" ng-options="product.id as product.product_name for product in products" required>
+          <select name="products" ng-model="ordersData.products" ng-options="product.id as product.name for product in products" required>
             <option value="">Choose item</option>
           </select>
         </label>

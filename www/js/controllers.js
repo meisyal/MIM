@@ -107,7 +107,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 });
 
-MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup, Customer) {
+MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup, Customer, Product) {
   $scope.customers = [];
   $scope.products = [];
   $scope.orders = [];
@@ -116,19 +116,9 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
     $scope.customers = customers;
   });
 
-    var productQuery = 'SELECT id, name FROM Products';
-    $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.products.push({
-            id: res.rows.item(i).id,
-            product_name: res.rows.item(i).name,
-          });
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
+  Product.all().then(function(products) {
+    $scope.products = products;
+  });
 
     var query = 'SELECT t.id AS id, c.name AS name FROM Transactions t, Customers c ' +
       'WHERE categories = ? AND t.customer_id = c.id';
