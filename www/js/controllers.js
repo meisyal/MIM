@@ -404,22 +404,18 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   });
 
   $scope.openCustomerModal = function(index, customer) {
+    $scope.customersData = {};
+
     if (index == 1) {
-      $scope.customersData = {};
       $scope.addModal.show();
     } else {
-      $scope.customersData = {};
-      var query = 'SELECT id, name, address, telephone_number FROM Customers WHERE id = ?';
-      $cordovaSQLite.execute(db, query, [customer.id]).then(function(res) {
-        if (res.rows.length) {
-          $scope.customersData.id = res.rows.item(0).id;
-          $scope.customersData.name = res.rows.item(0).name;
-          $scope.customersData.address = res.rows.item(0).address;
-          $scope.customersData.phone = res.rows.item(0).telephone_number;
-        }
-      }, function(error) {
-        console.error(error);
+      Customer.get(customer.id).then(function(customerData) {
+        $scope.customersData.id = customerData.id;
+        $scope.customersData.name = customerData.name;
+        $scope.customersData.address = customerData.address;
+        $scope.customersData.phone = customerData.telephone_number;
       });
+
       $scope.editModal.show();
     }
   };

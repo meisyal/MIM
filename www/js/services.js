@@ -33,7 +33,7 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
     var output = null;
 
     if (res.rows.length) {
-      angular.copy(output, res.rows.item(0));
+      output = angular.copy(res.rows.item(0));
     }
 
     return output;
