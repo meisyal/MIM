@@ -454,21 +454,13 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
   };
 });
 
-MIM.controller('CustomerDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
-  $ionicPlatform.ready(function() {
-    var query = 'SELECT name, address, telephone_number, DATETIME(created_at, \'localtime\') ' +
-      'AS joined_date, DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [$stateParams.customerId]).then(function(res) {
-      if (res.rows.length) {
-        $scope.customer_name = res.rows.item(0).name;
-        $scope.customer_address = res.rows.item(0).address;
-        $scope.customer_phone = res.rows.item(0).telephone_number;
-        $scope.customer_joined = res.rows.item(0).joined_date;
-        $scope.customer_updated = res.rows.item(0).updated_date;
-      }
-    }, function(error) {
-      console.error(error);
-    });
+MIM.controller('CustomerDetailController', function($scope, $stateParams, Customer) {
+  Customer.get($stateParams.customerId).then(function(customerDetail) {
+    $scope.customer_name = customerDetail.name;
+    $scope.customer_address = customerDetail.address;
+    $scope.customer_phone = customerDetail.telephone_number;
+    $scope.customer_joined = customerDetail.joined_date;
+    $scope.customer_updated = customerDetail.updated_date;
   });
 });
 

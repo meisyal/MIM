@@ -51,8 +51,10 @@ MIM.factory('Customer', function($cordovaSQLite, DB) {
 
   this.get = function(customerId) {
     var parameters = [customerId];
-    return DB.queryStatement("SELECT id, name, address, telephone_number FROM " +
-      "Customers WHERE id = ?", parameters).then(function(res) {
+    return DB.queryStatement("SELECT id, name, address, telephone_number, " +
+      "DATETIME(created_at, \'localtime\') AS joined_date, " +
+      "DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers " +
+      "WHERE id = ?", parameters).then(function(res) {
       return DB.getById(res);
     });
   };
