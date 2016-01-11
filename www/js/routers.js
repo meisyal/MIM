@@ -99,5 +99,6 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     });
-    $urlRouterProvider.otherwise('/app/config');
+
+  $urlRouterProvider.otherwise('/app/config');
 });

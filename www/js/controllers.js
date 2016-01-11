@@ -12,6 +12,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
     disableAnimate: true,
     disableBack: true
   });
+
   $ionicPlatform.ready(function() {
     $ionicLoading.show({
       template: 'Loading...',
@@ -43,19 +44,19 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
     $scope.customers = customers;
   });
 
-    var productQuery = 'SELECT id, name FROM Products WHERE remaining_amount > 0';
-    $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.products.push({
-            id: res.rows.item(i).id,
-            product_name: res.rows.item(i).name,
-          });
-        }
+  var productQuery = 'SELECT id, name FROM Products WHERE remaining_amount > 0';
+  $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
+    if (res.rows.length) {
+      for (var i = 0; i < res.rows.length; i++) {
+        $scope.products.push({
+          id: res.rows.item(i).id,
+          product_name: res.rows.item(i).name,
+        });
       }
-    }, function(error) {
-      console.error(error);
-    });
+    }
+  }, function(error) {
+    console.error(error);
+  });
 
   $scope.addSale = function(saleData) {
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
@@ -70,7 +71,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
         $scope.showAlert();
         saleData.newItem = '';
       }, function(error) {
-      console.error(error);
+        console.error(error);
       });
     });
   };
@@ -184,7 +185,6 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
       title: 'Delete an Order',
       template: 'Are you sure you want to delete this sale order?',
     });
-
     confirmPopup.then(function(res) {
       if (res) {
         var outerQuery = 'DELETE FROM Buying WHERE transaction_id = ?';
@@ -314,7 +314,6 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
       title: 'Delete an Item',
       template: 'Are you sure you want to delete this item?',
     });
-
     confirmPopup.then(function(res) {
       if (res) {
         var query = 'DELETE FROM Products WHERE id = ?';
@@ -415,7 +414,6 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
         $scope.customersData.address = customerData.address;
         $scope.customersData.phone = customerData.telephone_number;
       });
-
       $scope.editModal.show();
     }
   };
@@ -438,7 +436,6 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
       title: 'Delete Customer',
       template: 'Are you sure you want to delete this customer?',
     });
-
     confirmPopup.then(function(res) {
       if (res) {
         var query = 'DELETE FROM Customers WHERE id = ?';
