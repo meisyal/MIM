@@ -59,6 +59,12 @@ MIM.factory('Customer', function($cordovaSQLite, DB) {
     });
   };
 
+  this.add = function(customer) {
+    var parameters = [customer.name, customer.address, customer.phone];
+    return DB.queryStatement("INSERT INTO Customers (name, address, telephone_number) " +
+      "VALUES (?, ?, ?)", parameters);
+  };
+
   return this;
 });
 
