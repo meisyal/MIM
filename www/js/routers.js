@@ -1,6 +1,6 @@
 var MIM = angular.module('starter.routers', []);
 
-MIM.config(function($stateProvider, $urlRouterProvider) {
+MIM.config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('app', {
       url: '/app',

@@ -1,14 +1,14 @@
 var MIM = angular.module('starter.services', []);
 
-MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
-  this.queryStatement = function(query, parameters) {
+MIM.factory('DB', function ($q, $ionicPlatform, $cordovaSQLite) {
+  this.queryStatement = function (query, parameters) {
     parameters = parameters || [];
     var q = $q.defer();
 
     $ionicPlatform.ready(function() {
-      $cordovaSQLite.execute(db, query, parameters).then(function(res) {
+      $cordovaSQLite.execute(db, query, parameters).then(function (res) {
         q.resolve(res);
-      }, function(error) {
+      }, function (error) {
         console.error(error);
         q.reject(error);
       });
@@ -17,7 +17,7 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
     return q.promise;
   };
 
-  this.getAll = function(res) {
+  this.getAll = function (res) {
     var output = [];
 
     if (res.rows.length) {
@@ -29,7 +29,7 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
     return output;
   };
 
-  this.getById = function(res) {
+  this.getById = function (res) {
     var output = null;
 
     if (res.rows.length) {
@@ -42,19 +42,19 @@ MIM.factory('DB', function($q, $ionicPlatform, $cordovaSQLite) {
   return this;
 });
 
-MIM.factory('Customer', function($cordovaSQLite, DB) {
-  this.all = function() {
-    return DB.queryStatement("SELECT id, name FROM Customers").then(function(res) {
+MIM.factory('Customer', function ($cordovaSQLite, DB) {
+  this.all = function () {
+    return DB.queryStatement("SELECT id, name FROM Customers").then(function (res) {
       return DB.getAll(res);
     });
   };
 
-  this.get = function(customerId) {
+  this.get = function (customerId) {
     var parameters = [customerId];
     return DB.queryStatement("SELECT id, name, address, telephone_number, " +
       "DATETIME(created_at, \'localtime\') AS joined_date, " +
       "DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers " +
-      "WHERE id = ?", parameters).then(function(res) {
+      "WHERE id = ?", parameters).then(function (res) {
       return DB.getById(res);
     });
   };
@@ -62,9 +62,9 @@ MIM.factory('Customer', function($cordovaSQLite, DB) {
   return this;
 });
 
-MIM.factory('Product', function($cordovaSQLite, DB) {
+MIM.factory('Product', function ($cordovaSQLite, DB) {
   this.all = function() {
-    return DB.queryStatement("SELECT id, name FROM Products").then(function(res) {
+    return DB.queryStatement("SELECT id, name FROM Products").then(function (res) {
       return DB.getAll(res);
     });
   };
