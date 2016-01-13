@@ -366,33 +366,17 @@ MIM.controller('CustomerController', function($scope, $cordovaSQLite, $ionicModa
   };
 
   $scope.addCustomer = function(customersData) {
-    var query = 'INSERT INTO Customers (name, address, telephone_number) VALUES (?, ?, ?)';
-    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone]).then(function(res) {
-      $scope.customers.push({
-        id: res.insertId,
-        customer_name: customersData.name,
-        customer_address: customersData.address,
-        customer_phone: customersData.phone,
-      });
-      $scope.populateCustomers();
-      $scope.closeCustomerModal(1);
-      $scope.cleanForm();
-    }, function(error) {
-      console.error(error);
-    });
+    Customer.add(customersData);
+    $scope.populateCustomers();
+    $scope.closeCustomerModal(1);
+    $scope.cleanForm();
   };
 
   $scope.editCustomer = function(customersData) {
-    var query = 'UPDATE Customers SET name = ?, address = ?, telephone_number = ?, ' +
-      'updated_at = DATETIME(\'now\') WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customersData.id]).then(function(res) {
-      console.log('Item ' + customersData.id + ' is updated.');
-      $scope.populateCustomers();
-      $scope.closeCustomerModal(2);
-      $scope.cleanForm();
-    }, function(error) {
-      console.error(error);
-    });
+    Customer.update(customersData);
+    $scope.populateCustomers();
+    $scope.closeCustomerModal(2);
+    $scope.cleanForm();
   };
 
   $ionicModal.fromTemplateUrl('templates/add_customer.html', {
@@ -453,12 +437,8 @@ MIM.controller('CustomerController', function($scope, $cordovaSQLite, $ionicModa
 
     confirmPopup.then(function(res) {
       if (res) {
-        var query = 'DELETE FROM Customers WHERE id = ?';
-        $cordovaSQLite.execute(db, query, [customer.id]).then(function(tx) {
-          $scope.customers.splice($scope.customers.indexOf(customer), 1);
-        }, function(error) {
-          console.error(error);
-        });
+        Customer.delete(customer);
+        $scope.populateCustomers();
       } else {
         console.log('You cancel deleting this customer.');
       }

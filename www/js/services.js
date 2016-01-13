@@ -65,6 +65,17 @@ MIM.factory('Customer', function($cordovaSQLite, DB) {
       "VALUES (?, ?, ?)", parameters);
   };
 
+  this.update = function (customer) {
+    var parameters = [customer.name, customer.address, customer.phone, customer.id];
+    return DB.queryStatement('UPDATE Customers SET name = ?, address = ?, telephone_number = ?, ' +
+      'updated_at = DATETIME(\'now\') WHERE id = ?', parameters);
+  };
+
+  this.delete = function (customer) {
+    var parameters = [customer.id];
+    return DB.queryStatement('DELETE FROM Customers WHERE id = ?', parameters);
+  };
+
   return this;
 });
 
