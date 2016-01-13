@@ -10,7 +10,7 @@ MIM.controller('AppController', function ($location) {
 MIM.controller('ConfigController', function ($ionicPlatform, $ionicLoading, $location, $ionicHistory) {
   $ionicHistory.nextViewOptions({
     disableAnimate: true,
-    disableBack: true
+    disableBack: true,
   });
 
   $ionicPlatform.ready(function () {
@@ -163,7 +163,7 @@ MIM.controller('SalesOrderController', function ($scope, $ionicPlatform, $cordov
 
   $ionicModal.fromTemplateUrl('templates/add_order.html', {
     scope: $scope,
-    animation: 'slide-in-up'
+    animation: 'slide-in-up',
   }).then(function (modal) {
     $scope.modal = modal;
   });
@@ -277,7 +277,7 @@ MIM.controller('InventoryItemsController', function ($scope, $ionicPlatform, $co
 
   $ionicModal.fromTemplateUrl('templates/edit_item.html', {
     scope: $scope,
-    animation: 'slide-in-up'
+    animation: 'slide-in-up',
   }).then(function (modal) {
     $scope.modal = modal;
   });
@@ -389,7 +389,7 @@ MIM.controller('CustomerController', function ($scope, $ionicPlatform, $cordovaS
   $ionicModal.fromTemplateUrl('templates/add_customer.html', {
     id: '1',
     scope: $scope,
-    animation: 'slide-in-up'
+    animation: 'slide-in-up',
   }).then(function (modal) {
     $scope.addModal = modal;
   });
@@ -397,7 +397,7 @@ MIM.controller('CustomerController', function ($scope, $ionicPlatform, $cordovaS
   $ionicModal.fromTemplateUrl('templates/edit_customer.html', {
     id: '2',
     scope: $scope,
-    animation: 'slide-in-up'
+    animation: 'slide-in-up',
   }).then(function (modal) {
     $scope.editModal = modal;
   });
