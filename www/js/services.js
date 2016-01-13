@@ -5,7 +5,7 @@ MIM.factory('DB', function ($q, $ionicPlatform, $cordovaSQLite) {
     parameters = parameters || [];
     var q = $q.defer();
 
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function () {
       $cordovaSQLite.execute(db, query, parameters).then(function (res) {
         q.resolve(res);
       }, function (error) {
@@ -63,7 +63,7 @@ MIM.factory('Customer', function ($cordovaSQLite, DB) {
 });
 
 MIM.factory('Product', function ($cordovaSQLite, DB) {
-  this.all = function() {
+  this.all = function () {
     return DB.queryStatement("SELECT id, name FROM Products").then(function (res) {
       return DB.getAll(res);
     });

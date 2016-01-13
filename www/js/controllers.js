@@ -62,15 +62,15 @@ MIM.controller('SalesController', function ($scope, $ionicPlatform, $cordovaSQLi
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
       'status, customer_id) VALUES (?, ?, ?, ?)';
     var buyQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
-    $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function(tx) {
-      $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function(res) {
+    $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function (tx) {
+      $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function (res) {
         console.log('Customer id ' + saleData.customers + ' and Transaction id ' +
           tx.insertId + ' are successfully inserted.');
         $scope.getRemainingAmount(saleData.products, saleData.amount);
         $scope.updateProductAmount(saleData.products, saleData.amount);
         $scope.showAlert();
         saleData.newItem = '';
-      }, function(error) {
+      }, function (error) {
         console.error(error);
       });
     });
@@ -78,21 +78,21 @@ MIM.controller('SalesController', function ($scope, $ionicPlatform, $cordovaSQLi
 
   $scope.getRemainingAmount = function (id, amount) {
     var query = 'SELECT remaining_amount FROM Products WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [id]).then(function(res) {
+    $cordovaSQLite.execute(db, query, [id]).then(function (res) {
       if (res.rows.length) {
         $scope.remaining_amount = res.rows.item(0).remaining_amount - amount;
         $scope.updateProductAmount(id, $scope.remaining_amount);
       }
-    }, function(error) {
+    }, function (error) {
       console.error(error);
     });
   };
 
   $scope.updateProductAmount = function (id, remaining_amount) {
     var query = 'UPDATE Products SET remaining_amount = ? WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [remaining_amount, id]).then(function(res) {
+    $cordovaSQLite.execute(db, query, [remaining_amount, id]).then(function (res) {
       console.log('one row is affected');
-    }, function(error) {
+    }, function (error) {
       console.error(error);
     });
   };
@@ -102,7 +102,7 @@ MIM.controller('SalesController', function ($scope, $ionicPlatform, $cordovaSQLi
       title: 'Success',
       template: 'A new transaction has been added',
     });
-    alertPopup.then(function(res) {
+    alertPopup.then(function (res) {
       console.log('Transaction is successfully added.');
     });
   };
@@ -224,7 +224,7 @@ MIM.controller('AddInventoryController', function ($scope, $cordovaSQLite, $ioni
   $scope.addProduct = function (productData) {
     var query = 'INSERT INTO Products (name, description, remaining_amount, ' +
       'selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)';
-    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function(res) {
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.amount, productData.selling_price, productData.purchase_price]).then(function (res) {
       console.log('Item ' + res.insertId + ' is successfully inserted.');
       $scope.showAlert();
       productData.newItem = '';
@@ -246,7 +246,7 @@ MIM.controller('AddInventoryController', function ($scope, $cordovaSQLite, $ioni
 
 MIM.controller('InventoryItemsController', function ($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
   $scope.inventory = [];
-  $ionicPlatform.ready(function() {
+  $ionicPlatform.ready(function () {
     var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
     $cordovaSQLite.execute(db, query, []).then(function (res) {
       if (res.rows.length) {
@@ -266,7 +266,7 @@ MIM.controller('InventoryItemsController', function ($scope, $ionicPlatform, $co
   $scope.editItem = function (productData) {
     var query = 'UPDATE Products SET name = ?, description = ?, ' +
       'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
+    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.selling_price, productData.purchase_price, productData.id]).then(function (res) {
       console.log('Item ' + productData.id + ' is updated.');
       productData.newItem = '';
       $scope.closeItemModal();
@@ -405,7 +405,7 @@ MIM.controller('CustomerController', function ($scope, $ionicPlatform, $cordovaS
   $scope.openCustomerModal = function (index, customer) {
     $scope.customersData = {};
 
-    if (index == 1) {
+    if (index === 1) {
       $scope.addModal.show();
     } else {
       Customer.get(customer.id).then(function (customerData) {
@@ -419,7 +419,7 @@ MIM.controller('CustomerController', function ($scope, $ionicPlatform, $cordovaS
   };
 
   $scope.closeCustomerModal = function (index) {
-    if (index == 1) {
+    if (index === 1) {
       $scope.addModal.hide();
     } else {
       $scope.editModal.hide();
