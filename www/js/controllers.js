@@ -352,12 +352,18 @@ MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup, Customer) {
+MIM.controller('CustomerController', function($scope, $cordovaSQLite, $ionicModal, $ionicPopup, Customer) {
   $scope.customers = [];
 
-  Customer.all().then(function(customers) {
-    $scope.customers = customers;
+  $scope.$on('$ionicView.enter', function () {
+    $scope.populateCustomers();
   });
+
+  $scope.populateCustomers = function () {
+    Customer.all().then(function(customers) {
+      $scope.customers = customers;
+    });
+  };
 
   $scope.addCustomer = function(customersData) {
     var query = 'INSERT INTO Customers (name, address, telephone_number) VALUES (?, ?, ?)';
@@ -368,8 +374,9 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
         customer_address: customersData.address,
         customer_phone: customersData.phone,
       });
-      customersData.newItem = '';
+      $scope.populateCustomers();
       $scope.closeCustomerModal(1);
+      $scope.cleanForm();
     }, function(error) {
       console.error(error);
     });
@@ -380,8 +387,9 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
       'updated_at = DATETIME(\'now\') WHERE id = ?';
     $cordovaSQLite.execute(db, query, [customersData.name, customersData.address, customersData.phone, customersData.id]).then(function(res) {
       console.log('Item ' + customersData.id + ' is updated.');
-      customersData.newItem = '';
+      $scope.populateCustomers();
       $scope.closeCustomerModal(2);
+      $scope.cleanForm();
     }, function(error) {
       console.error(error);
     });
@@ -426,6 +434,10 @@ MIM.controller('CustomerController', function($scope, $ionicPlatform, $cordovaSQ
     } else {
       $scope.editModal.hide();
     }
+  };
+
+  $scope.cleanForm = function () {
+    customersData.newItem = '';
   };
 
   $scope.$on('$destroy', function() {
