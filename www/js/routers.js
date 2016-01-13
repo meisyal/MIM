@@ -1,19 +1,19 @@
 var MIM = angular.module('starter.routers', []);
 
-MIM.config(function($stateProvider, $urlRouterProvider) {
+MIM.config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('app', {
       url: '/app',
       abstract: true,
       templateUrl: 'templates/menu.html',
-      controller: 'AppController'
+      controller: 'AppController',
     })
     .state('app.config', {
       url: '/config',
       views: {
         'menuContent': {
           templateUrl: 'templates/config.html',
-          controller: 'ConfigController'
+          controller: 'ConfigController',
         }
       }
     })
@@ -22,7 +22,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/sales.html',
-          controller: 'SalesController'
+          controller: 'SalesController',
         }
       }
     })
@@ -32,7 +32,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/sales_order.html',
-          controller: 'SalesOrderController'
+          controller: 'SalesOrderController',
         }
       }
     })
@@ -41,7 +41,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/order_detail.html',
-          controller: 'OrderDetailController'
+          controller: 'OrderDetailController',
         }
       }
     })
@@ -50,7 +50,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/add_inventory.html',
-          controller: 'AddInventoryController'
+          controller: 'AddInventoryController',
         }
       }
     })
@@ -59,7 +59,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/inventory_items.html',
-          controller: 'InventoryItemsController'
+          controller: 'InventoryItemsController',
         }
       }
     })
@@ -68,7 +68,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/item_detail.html',
-          controller: 'ItemDetailController'
+          controller: 'ItemDetailController',
         }
       }
     })
@@ -77,7 +77,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/customers.html',
-          controller: 'CustomerController'
+          controller: 'CustomerController',
         }
       }
     })
@@ -86,7 +86,7 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/customer_detail.html',
-          controller: 'CustomerDetailController'
+          controller: 'CustomerDetailController',
         }
       }
     })
@@ -95,9 +95,10 @@ MIM.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'menuContent': {
           templateUrl: 'templates/statistics.html',
-          controller: 'StatisticsController'
+          controller: 'StatisticsController',
         }
       }
     });
-    $urlRouterProvider.otherwise('/app/config');
+
+  $urlRouterProvider.otherwise('/app/config');
 });
