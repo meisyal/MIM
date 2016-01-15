@@ -86,5 +86,38 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
     });
   };
 
+  this.get = function (product) {
+    var parameters = [product.id];
+    return DB.queryStatement('SELECT id, name, description, remaining_amount, ' +
+      'selling_price, purchase_price FROM Products ' +
+      'WHERE id = ?', parameters).then(function (res) {
+      return DB.getById(res);
+    });
+  };
+
+  this.update = function (product) {
+    var parameters = [
+      product.name,
+      product.description,
+      product.selling_price,
+      product.purchase_price, product.id,
+    ];
+    return DB.queryStatement('UPDATE Products SET name = ?, description = ?, ' +
+      'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') ' +
+      'WHERE id = ?', parameters);
+  };
+
+  this.delete = function (product) {
+    var parameters = [product.id];
+    return DB.queryStatement('DELETE FROM Products WHERE id = ?', parameters);
+  };
+
+  this.orderByAmount = function () {
+    return DB.queryStatement('SELECT id, name, remaining_amount FROM Products ' +
+      'ORDER BY remaining_amount DESC').then(function (res) {
+      return DB.getAll(res);
+    });
+  };
+
   return this;
 });

@@ -244,35 +244,24 @@ MIM.controller('AddInventoryController', function($scope, $cordovaSQLite, $ionic
   };
 });
 
-MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup) {
+MIM.controller('InventoryItemsController', function($scope, $ionicModal, $ionicPopup, Product) {
   $scope.inventory = [];
-  $ionicPlatform.ready(function() {
-    var query = 'SELECT id, name, remaining_amount FROM Products ORDER BY remaining_amount DESC';
-    $cordovaSQLite.execute(db, query, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.inventory.push({
-            id: res.rows.item(i).id,
-            product_name: res.rows.item(i).name,
-            product_amount: res.rows.item(i).remaining_amount,
-          });
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
+
+  $scope.$on('$ionicView.enter', function () {
+    $scope.populateProducts();
   });
 
-  $scope.editItem = function(productData) {
-    var query = 'UPDATE Products SET name = ?, description = ?, ' +
-      'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [productData.name, productData.description, productData.selling_price, productData.purchase_price, productData.id]).then(function(res) {
-      console.log('Item ' + productData.id + ' is updated.');
-      productData.newItem = '';
-      $scope.closeItemModal();
-    }, function(error) {
-      console.error(error);
+  $scope.populateProducts = function () {
+    Product.orderByAmount().then(function (products) {
+      $scope.inventory = products;
     });
+  };
+
+  $scope.editItem = function(productData) {
+    Product.update(productData);
+    $scope.populateProducts();
+    $scope.closeItemModal();
+    $scope.cleanForm();
   };
 
   $ionicModal.fromTemplateUrl('templates/edit_item.html', {
@@ -284,25 +273,25 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
 
   $scope.openItemModal = function(item) {
     $scope.productData = {};
-    var query = 'SELECT id, name, description, remaining_amount, selling_price, ' +
-      'purchase_price FROM Products WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [item.id]).then(function(res) {
-      if (res.rows.length) {
-        $scope.productData.id = res.rows.item(0).id;
-        $scope.productData.name = res.rows.item(0).name;
-        $scope.productData.description = res.rows.item(0).description;
-        $scope.productData.amount = res.rows.item(0).remaining_amount;
-        $scope.productData.purchase_price = res.rows.item(0).purchase_price;
-        $scope.productData.selling_price = res.rows.item(0).selling_price;
-      }
-    }, function(error) {
-      console.error(error);
+
+    Product.get(item).then(function (itemData) {
+      $scope.productData.id = itemData.id;
+      $scope.productData.name = itemData.name;
+      $scope.productData.description = itemData.description;
+      $scope.productData.amount = itemData.remaining_amount;
+      $scope.productData.purchase_price = itemData.purchase_price;
+      $scope.productData.selling_price = itemData.selling_price;
     });
+
     $scope.modal.show();
   };
 
   $scope.closeItemModal = function() {
     $scope.modal.hide();
+  };
+
+  $scope.cleanForm = function () {
+    productData.newItem = '';
   };
 
   $scope.$on('$destroy', function() {
@@ -317,12 +306,8 @@ MIM.controller('InventoryItemsController', function($scope, $ionicPlatform, $cor
 
     confirmPopup.then(function(res) {
       if (res) {
-        var query = 'DELETE FROM Products WHERE id = ?';
-        $cordovaSQLite.execute(db, query, [item.id]).then(function(tx) {
-          $scope.inventory.splice($scope.inventory.indexOf(item), 1);
-        }, function(error) {
-          console.error(error);
-        });
+        Product.delete(item);
+        $scope.populateProducts();
       } else {
         console.log('You cancel deleting this item.');
       }
@@ -352,7 +337,7 @@ MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordova
   });
 });
 
-MIM.controller('CustomerController', function($scope, $cordovaSQLite, $ionicModal, $ionicPopup, Customer) {
+MIM.controller('CustomerController', function($scope, $ionicModal, $ionicPopup, Customer) {
   $scope.customers = [];
 
   $scope.$on('$ionicView.enter', function () {
