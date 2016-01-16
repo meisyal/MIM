@@ -86,11 +86,12 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
     });
   };
 
-  this.get = function (product) {
-    var parameters = [product.id];
+  this.get = function (productId) {
+    var parameters = [productId];
     return DB.queryStatement('SELECT id, name, description, remaining_amount, ' +
-      'selling_price, purchase_price FROM Products ' +
-      'WHERE id = ?', parameters).then(function (res) {
+      'selling_price, purchase_price, DATETIME(created_at, \'localtime\') AS ' +
+      'created_date, DATETIME(updated_at, \'localtime\') AS updated_date ' +
+      'FROM Products WHERE id = ?', parameters).then(function (res) {
       return DB.getById(res);
     });
   };

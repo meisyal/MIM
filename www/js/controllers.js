@@ -274,7 +274,7 @@ MIM.controller('InventoryItemsController', function($scope, $ionicModal, $ionicP
   $scope.openItemModal = function(item) {
     $scope.productData = {};
 
-    Product.get(item).then(function (itemData) {
+    Product.get(item.id).then(function (itemData) {
       $scope.productData.id = itemData.id;
       $scope.productData.name = itemData.name;
       $scope.productData.description = itemData.description;
@@ -315,25 +315,15 @@ MIM.controller('InventoryItemsController', function($scope, $ionicModal, $ionicP
   };
 });
 
-MIM.controller('ItemDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
-  $ionicPlatform.ready(function() {
-    var query = 'SELECT name, description, remaining_amount, selling_price, ' +
-      'purchase_price, DATETIME(created_at, \'localtime\') AS created_date, ' +
-      'DATETIME(updated_at, \'localtime\') AS updated_date ' +
-      'FROM Products WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [$stateParams.itemId]).then(function(res) {
-      if (res.rows.length) {
-        $scope.product_name = res.rows.item(0).name;
-        $scope.product_description = res.rows.item(0).description;
-        $scope.product_amount = res.rows.item(0).remaining_amount;
-        $scope.purchase_price = res.rows.item(0).selling_price;
-        $scope.selling_price = res.rows.item(0).purchase_price;
-        $scope.created_date = res.rows.item(0).created_date;
-        $scope.updated_date = res.rows.item(0).updated_date;
-      }
-    }, function(error) {
-      console.error(error);
-    });
+MIM.controller('ItemDetailController', function($scope, $stateParams, Product) {
+  Product.get($stateParams.itemId).then(function (itemDetail) {
+    $scope.product_name = itemDetail.name;
+    $scope.product_description = itemDetail.description;
+    $scope.product_amount = itemDetail.remaining_amount;
+    $scope.purchase_price = itemDetail.selling_price;
+    $scope.selling_price = itemDetail.purchase_price;
+    $scope.created_date = itemDetail.created_date;
+    $scope.updated_date = itemDetail.updated_date;
   });
 });
 
