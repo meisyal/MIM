@@ -96,6 +96,18 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
     });
   };
 
+  this.add = function (product) {
+    var parameters = [
+      product.name,
+      product.description,
+      product.amount,
+      product.selling_price,
+      product.purchase_price,
+    ];
+    return DB.queryStatement('INSERT INTO Products (name, description, remaining_amount, ' +
+      'selling_price, purchase_price) VALUES (?, ?, ?, ?, ?)', parameters);
+  };
+
   this.update = function (product) {
     var parameters = [
       product.name,
