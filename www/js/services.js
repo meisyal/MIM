@@ -86,12 +86,25 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
     });
   };
 
+  this.hasAmount = function () {
+    return DB.queryStatement('SELECT id, name FROM Products WHERE remaining_amount > 0').then(function (res) {
+      return DB.getAll(res);
+    });
+  };
+
   this.get = function (productId) {
     var parameters = [productId];
     return DB.queryStatement('SELECT id, name, description, remaining_amount, ' +
       'selling_price, purchase_price, DATETIME(created_at, \'localtime\') AS ' +
       'created_date, DATETIME(updated_at, \'localtime\') AS updated_date ' +
       'FROM Products WHERE id = ?', parameters).then(function (res) {
+      return DB.getById(res);
+    });
+  };
+
+  this.getAmount = function (productId) {
+    var parameters = [productId];
+    return DB.queryStatement('SELECT remaining_amount FROM Products WHERE id = ?', parameters).then(function (res) {
       return DB.getById(res);
     });
   };
@@ -118,6 +131,11 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
     return DB.queryStatement('UPDATE Products SET name = ?, description = ?, ' +
       'selling_price = ?, purchase_price = ?, updated_at = DATETIME(\'now\') ' +
       'WHERE id = ?', parameters);
+  };
+
+  this.updateAmount = function (productId, productAmount) {
+    var parameters = [productAmount, productId];
+    return DB.queryStatement('UPDATE Products SET remaining_amount = ? WHERE id = ?', parameters);
   };
 
   this.delete = function (product) {

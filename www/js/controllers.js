@@ -35,7 +35,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
   });
 });
 
-MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup, Customer) {
+MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup, Customer, Product) {
   $scope.customers = [];
   $scope.products = [];
 
@@ -43,19 +43,9 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
     $scope.customers = customers;
   });
 
-    var productQuery = 'SELECT id, name FROM Products WHERE remaining_amount > 0';
-    $cordovaSQLite.execute(db, productQuery, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.products.push({
-            id: res.rows.item(i).id,
-            product_name: res.rows.item(i).name,
-          });
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
+  Product.hasAmount().then(function (products) {
+    $scope.products = products;
+  });
 
   $scope.addSale = function(saleData) {
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
@@ -76,24 +66,14 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 
   $scope.getRemainingAmount = function(id, amount) {
-    var query = 'SELECT remaining_amount FROM Products WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [id]).then(function(res) {
-      if (res.rows.length) {
-        $scope.remaining_amount = res.rows.item(0).remaining_amount - amount;
-        $scope.updateProductAmount(id, $scope.remaining_amount);
-      }
-    }, function(error) {
-      console.error(error);
+    Product.getAmount(id).then(function (productAmount) {
+      $scope.remaining_amount = productAmount.remaining_amount - amount;
+      $scope.updateProductAmount(id, $scope.remaining_amount);
     });
   };
 
   $scope.updateProductAmount = function(id, remaining_amount) {
-    var query = 'UPDATE Products SET remaining_amount = ? WHERE id = ?';
-    $cordovaSQLite.execute(db, query, [remaining_amount, id]).then(function(res) {
-      console.log('one row is affected');
-    }, function(error) {
-      console.error(error);
-    });
+    Product.updateAmount(id, remaining_amount);
   };
 
   $scope.showAlert = function() {
