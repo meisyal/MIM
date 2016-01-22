@@ -107,7 +107,7 @@ If you face any problems or find a bug, feel free to submit an [issue][issue] or
 
 ## License
 
-This project is released under GNU General Public License Version 3. Please, check
+This project is released under Apache License Version 2. Please, check
 [LICENSE][license] for more information. All other contents (dependencies and
 etc.) are redistributed under their original license terms.
 
