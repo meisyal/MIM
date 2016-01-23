@@ -183,20 +183,11 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
   };
 });
 
-MIM.controller('OrderDetailController', function($scope, $ionicPlatform, $cordovaSQLite, $stateParams) {
-  $ionicPlatform.ready(function() {
-    var query = 'SELECT p.name AS name, b.amount AS amount, t.total_price ' +
-      'AS total_price FROM Transactions t, Buying b, Products p WHERE ' +
-      't.id = b.transaction_id AND b.product_id = p.id AND t.id = ?';
-    $cordovaSQLite.execute(db, query, [$stateParams.orderId]).then(function(res) {
-      if (res.rows.length) {
-          $scope.product_name = res.rows.item(0).name;
-          $scope.order_amount = res.rows.item(0).amount;
-          $scope.order_price = res.rows.item(0).total_price;
-      }
-    }, function(error) {
-      console.error(error);
-    });
+MIM.controller('OrderDetailController', function($scope, $stateParams, Order) {
+  Order.get($stateParams.orderId).then(function (orderDetail) {
+    $scope.product_name = orderDetail.name;
+    $scope.order_amount = orderDetail.amount;
+    $scope.order_price = orderDetail.total_price;
   });
 });
 
