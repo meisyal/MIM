@@ -87,7 +87,7 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   };
 });
 
-MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicModal, $ionicPopup, Customer, Product) {
+MIM.controller('SalesOrderController', function($scope, $cordovaSQLite, $ionicModal, $ionicPopup, Customer, Product, Order) {
   $scope.customers = [];
   $scope.products = [];
   $scope.orders = [];
@@ -100,20 +100,9 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
     $scope.products = products;
   });
 
-    var query = 'SELECT t.id AS id, c.name AS name FROM Transactions t, Customers c ' +
-      'WHERE categories = ? AND t.customer_id = c.id';
-    $cordovaSQLite.execute(db, query, ["O"]).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.orders.push({
-            id: res.rows.item(i).id,
-            customer_name: res.rows.item(i).name,
-          });
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
+  Order.all('O').then(function (orders) {
+    $scope.orders = orders;
+  });
 
   $scope.addOrder = function(ordersData) {
     var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
@@ -126,7 +115,7 @@ MIM.controller('SalesOrderController', function($scope, $ionicPlatform, $cordova
           if (res.rows.length) {
             $scope.orders.push({
               id: tx.insertId,
-              customer_name: res.rows.item(0).name,
+              name: res.rows.item(0).name,
             });
             ordersData.newItem = '';
             $scope.closeOrderModal();

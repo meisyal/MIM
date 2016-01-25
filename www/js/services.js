@@ -154,6 +154,15 @@ MIM.factory('Product', function($cordovaSQLite, DB) {
 });
 
 MIM.factory('Order', function ($cordovaSQLite, DB) {
+  this.all = function (orderCategory) {
+    var parameters = [orderCategory];
+    return DB.queryStatement('SELECT t.id AS id, c.name AS name FROM Transactions t, ' +
+      'Customers c WHERE categories = ? AND t.customer_id = c.id', parameters)
+      .then(function (res) {
+        return DB.getAll(res);
+    });
+  };
+
   this.get = function (orderId) {
     var parameters = [orderId];
     return DB.queryStatement('SELECT p.name AS name, b.amount AS amount, ' +
@@ -161,7 +170,7 @@ MIM.factory('Order', function ($cordovaSQLite, DB) {
       'WHERE t.id = b.transaction_id AND b.product_id = p.id AND t.id = ?', parameters)
       .then(function (res) {
         return DB.getById(res);
-      });
+    });
   };
 
   return this;
