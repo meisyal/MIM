@@ -35,7 +35,7 @@ MIM.controller('ConfigController', function($ionicPlatform, $ionicLoading, $loca
   });
 });
 
-MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLite, $ionicPopup, Customer, Product) {
+MIM.controller('SalesController', function($scope, $ionicPopup, Customer, Product, Sale) {
   $scope.customers = [];
   $scope.products = [];
 
@@ -48,20 +48,12 @@ MIM.controller('SalesController', function($scope, $ionicPlatform, $cordovaSQLit
   });
 
   $scope.addSale = function(saleData) {
-    var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
-      'status, customer_id) VALUES (?, ?, ?, ?)';
-    var buyQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
-    $cordovaSQLite.execute(db, transactQuery, ["P", saleData.total_price, "1", saleData.customers]).then(function(tx) {
-      $cordovaSQLite.execute(db, buyQuery, [tx.insertId, saleData.products, saleData.amount]).then(function(res) {
-        console.log('Customer id ' + saleData.customers + ' and Transaction id ' +
-          tx.insertId + ' are successfully inserted.');
-        $scope.getRemainingAmount(saleData.products, saleData.amount);
-        $scope.updateProductAmount(saleData.products, saleData.amount);
-        $scope.showAlert();
-        saleData.newItem = '';
-      }, function(error) {
-      console.error(error);
-      });
+    Sale.addTransaction(saleData).then(function (res) {
+      Sale.addBuying(res.insertId, saleData);
+      $scope.getRemainingAmount(saleData.products, saleData.amount);
+      $scope.updateProductAmount(saleData.products, saleData.amount);
+      $scope.showAlert();
+      saleData.newItem = '';
     });
   };
 

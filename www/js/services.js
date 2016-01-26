@@ -175,3 +175,28 @@ MIM.factory('Order', function ($cordovaSQLite, DB) {
 
   return this;
 });
+
+MIM.factory('Sale', function ($cordovaSQLite, DB) {
+  this.addTransaction = function (saleData) {
+    var parameters = [
+      'P',
+      saleData.total_price,
+      '1',
+      saleData.customers,
+    ];
+    return DB.queryStatement('INSERT INTO Transactions (categories, total_price, ' +
+      'status, customer_id) VALUES (?, ?, ?, ?)', parameters);
+  };
+
+  this.addBuying = function (transactionId, saleData) {
+    var parameters = [
+      transactionId,
+      saleData.products,
+      saleData.amount,
+    ];
+    return DB.queryStatement('INSERT INTO Buying (transaction_id, product_id, ' +
+      'amount) VALUES (?, ?, ?)', parameters);
+  };
+
+  return this;
+});
