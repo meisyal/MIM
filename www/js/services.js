@@ -194,6 +194,16 @@ MIM.factory('Order', function ($cordovaSQLite, DB) {
       'amount) VALUES (?, ?, ?)', parameters);
   };
 
+  this.deleteBuying = function (orderId) {
+    var parameters = [orderId];
+    return DB.queryStatement('DELETE FROM Buying WHERE transaction_id = ?', parameters);
+  };
+
+  this.deleteTransaction = function (orderId) {
+    var parameters = [orderId];
+    return DB.queryStatement('DELETE FROM Transactions WHERE id = ?', parameters);
+  };
+
   return this;
 });
 

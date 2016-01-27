@@ -79,7 +79,7 @@ MIM.controller('SalesController', function($scope, $ionicPopup, Customer, Produc
   };
 });
 
-MIM.controller('SalesOrderController', function($scope, $cordovaSQLite, $ionicModal, $ionicPopup, Customer, Product, Order) {
+MIM.controller('SalesOrderController', function($scope, $ionicModal, $ionicPopup, Customer, Product, Order) {
   $scope.customers = [];
   $scope.products = [];
   $scope.orders = [];
@@ -142,15 +142,9 @@ MIM.controller('SalesOrderController', function($scope, $cordovaSQLite, $ionicMo
 
     confirmPopup.then(function(res) {
       if (res) {
-        var outerQuery = 'DELETE FROM Buying WHERE transaction_id = ?';
-        var innerQuery = 'DELETE FROM Transactions WHERE id = ?';
-        $cordovaSQLite.execute(db, outerQuery, [order.id]).then(function(tx) {
-          $cordovaSQLite.execute(db, innerQuery, [order.id]).then(function(tx) {
-            $scope.orders.splice($scope.orders.indexOf(order), 1);
-          });
-        }, function(error) {
-          console.error(error);
-        });
+        Order.deleteBuying(order.id);
+        Order.deleteTransaction(order.id);
+        $scope.populateOrders();
       } else {
         console.log('You cancel deleting this sale order.');
       }
