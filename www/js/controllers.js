@@ -92,32 +92,26 @@ MIM.controller('SalesOrderController', function($scope, $cordovaSQLite, $ionicMo
     $scope.products = products;
   });
 
-  Order.all('O').then(function (orders) {
-    $scope.orders = orders;
+  $scope.$on('$ionicView.enter', function () {
+    $scope.populateOrders();
   });
 
+  $scope.populateOrders = function () {
+    Order.all('O').then(function (orders) {
+      $scope.orders = orders;
+    });
+  };
+
   $scope.addOrder = function(ordersData) {
-    var transactQuery = 'INSERT INTO Transactions (categories, total_price, ' +
-      'status, customer_id) VALUES (?, ?, ?, ?)';
-    var orderQuery = 'INSERT INTO Buying (transaction_id, product_id, amount) VALUES (?, ?, ?)';
-    var query = 'SELECT name FROM Customers WHERE id = ?';
-    $cordovaSQLite.execute(db, transactQuery, ["O", ordersData.total_price, "0", ordersData.customers]).then(function(tx) {
-      $cordovaSQLite.execute(db, orderQuery, [tx.insertId, ordersData.products, ordersData.amount]).then(function(res) {
-        $cordovaSQLite.execute(db, query, [ordersData.customers]).then(function(res) {
-          if (res.rows.length) {
-            $scope.orders.push({
-              id: tx.insertId,
-              name: res.rows.item(0).name,
-            });
-            ordersData.newItem = '';
-            $scope.closeOrderModal();
-            console.log('Customer id ' + ordersData.customers + ' and ' +
-              'Transaction id ' + tx.insertId + ' are successfully inserted.');
-          }
-        }, function(error) {
-          console.error(error);
-        });
+    Order.addTransaction(ordersData).then(function (res) {
+      Order.addOrder(res.insertId, ordersData);
+      Customer.get(ordersData.customers).then(function (customers) {
+        console.log('Customer id ' + ordersData.customers + ' and ' +
+          'Transaction id ' + res.insertId + ' are successfully inserted.');
       });
+      $scope.populateOrders();
+      $scope.closeOrderModal();
+      ordersData.newItem = '';
     });
   };
 
