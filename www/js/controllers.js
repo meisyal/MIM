@@ -365,41 +365,35 @@ MIM.controller('CustomerDetailController', function($scope, $stateParams, Custom
   });
 });
 
-MIM.controller('StatisticsController', function($scope, $ionicPlatform, $cordovaSQLite) {
+MIM.controller('StatisticsController', function($scope, Statistic) {
   $scope.month_year = [];
   $scope.monthly_transaction = [];
   $scope.monthly_income = [];
   $scope.series = ["month-year"];
   $scope.count = [];
   $scope.total_price = [];
-  $ionicPlatform.ready(function() {
-    var transactionQuery = 'SELECT strftime(\'%m-%Y\', date) AS month_year, COUNT(id) AS total_transaction ' +
-      'FROM Transactions GROUP BY month_year';
-    $cordovaSQLite.execute(db, transactionQuery, []).then(function(res) {
-      if (res.rows.length) {
-        for (var i = 0; i < res.rows.length; i++) {
-          $scope.month_year.push(res.rows.item(i).month_year);
-          $scope.count.push(res.rows.item(i).total_transaction);
-        }
-      }
-    }, function(error) {
-      console.error(error);
-    });
 
+  $scope.$on('$ionicView.enter', function () {
+    $scope.drawTransactionStat();
     $scope.monthly_transaction.push($scope.count);
-
-    var incomeQuery = 'SELECT strftime(\'%m-%Y\', date) AS month_year, SUM(total_price) AS total_price ' +
-      'FROM Transactions GROUP BY month_year';
-      $cordovaSQLite.execute(db, incomeQuery, []).then(function(res) {
-        if (res.rows.length) {
-          for (var i = 0; i < res.rows.length; i++) {
-            $scope.total_price.push(res.rows.item(i).total_price);
-          }
-        }
-      }, function(error) {
-        console.error(error);
-      });
-
-      $scope.monthly_income.push($scope.total_price);
+    $scope.drawIncomeStat();
+    $scope.monthly_income.push($scope.total_price);
   });
+
+  $scope.drawTransactionStat = function () {
+    Statistic.getTransaction().then(function (res) {
+      for (var i = 0; i < res.length; i++) {
+        $scope.month_year.push(res[i].month_year);
+        $scope.count.push(res[i].total_transaction);
+      }
+    });
+  };
+
+  $scope.drawIncomeStat = function () {
+    Statistic.getIncome().then(function (res) {
+      for (var i = 0; i < res.length; i++) {
+        $scope.total_price.push(res[i].total_price);
+      }
+    });
+  };
 });

@@ -231,3 +231,23 @@ MIM.factory('Sale', function ($cordovaSQLite, DB) {
 
   return this;
 });
+
+MIM.factory('Statistic', function ($cordovaSQLite, DB) {
+  this.getTransaction = function () {
+    return DB.queryStatement('SELECT strftime(\'%m-%Y\', date) AS month_year, ' +
+      'COUNT(id) AS total_transaction FROM Transactions GROUP BY month_year')
+      .then(function (res) {
+        return DB.getAll(res);
+    });
+  };
+
+  this.getIncome = function () {
+    return DB.queryStatement('SELECT strftime(\'%m-%Y\', date) AS month_year, ' +
+      'SUM (total_price) AS total_price FROM Transactions GROUP BY month_year')
+      .then(function (res) {
+        return DB.getAll(res);
+    });
+  };
+
+  return this;
+});
