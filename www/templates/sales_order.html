@@ -5,7 +5,7 @@
   <ion-content>
     <ion-list>
       <ion-item ng-repeat="order in orders" href="#/app/order-detail/{{ order.id }}">
-        {{ order.customer_name }}
+        {{ order.name }}
         <ion-option-button class="button-assertive icon ion-android-delete" ng-click="deleteOrder(order)"></ion-option-button>
       </ion-item>
       <ion-item ng-show="!orders.length">No order :(</ion-item>
