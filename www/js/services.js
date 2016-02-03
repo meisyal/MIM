@@ -44,31 +44,31 @@ MIM.factory('DB', function ($q, $ionicPlatform, $cordovaSQLite) {
 
 MIM.factory('Customer', function ($cordovaSQLite, DB) {
   this.all = function () {
-    return DB.queryStatement("SELECT id, name FROM Customers").then(function (res) {
+    return DB.queryStatement('SELECT id, name FROM Customers').then(function (res) {
       return DB.getAll(res);
     });
   };
 
   this.get = function (customerId) {
     var parameters = [customerId];
-    return DB.queryStatement("SELECT id, name, address, telephone_number, " +
-      "DATETIME(created_at, \'localtime\') AS joined_date, " +
-      "DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers " +
-      "WHERE id = ?", parameters).then(function (res) {
-      return DB.getById(res);
+    return DB.queryStatement('SELECT id, name, address, telephone_number, ' +
+      'DATETIME(created_at, \'localtime\') AS joined_date, ' +
+      'DATETIME(updated_at, \'localtime\') AS updated_date FROM Customers ' +
+      'WHERE id = ?', parameters).then(function (res) {
+        return DB.getById(res);
     });
   };
 
-  this.add = function(customer) {
+  this.add = function (customer) {
     var parameters = [customer.name, customer.address, customer.phone];
-    return DB.queryStatement("INSERT INTO Customers (name, address, telephone_number) " +
-      "VALUES (?, ?, ?)", parameters);
+    return DB.queryStatement('INSERT INTO Customers (name, address, telephone_number) ' +
+      'VALUES (?, ?, ?)', parameters);
   };
 
   this.update = function (customer) {
     var parameters = [customer.name, customer.address, customer.phone, customer.id];
-    return DB.queryStatement('UPDATE Customers SET name = ?, address = ?, telephone_number = ?, ' +
-      'updated_at = DATETIME(\'now\') WHERE id = ?', parameters);
+    return DB.queryStatement('UPDATE Customers SET name = ?, address = ?, ' +
+      'telephone_number = ?, updated_at = DATETIME(\'now\') WHERE id = ?', parameters);
   };
 
   this.delete = function (customer) {
@@ -81,14 +81,15 @@ MIM.factory('Customer', function ($cordovaSQLite, DB) {
 
 MIM.factory('Product', function ($cordovaSQLite, DB) {
   this.all = function () {
-    return DB.queryStatement("SELECT id, name FROM Products").then(function (res) {
+    return DB.queryStatement('SELECT id, name FROM Products').then(function (res) {
       return DB.getAll(res);
     });
   };
 
   this.hasAmount = function () {
-    return DB.queryStatement('SELECT id, name FROM Products WHERE remaining_amount > 0').then(function (res) {
-      return DB.getAll(res);
+    return DB.queryStatement('SELECT id, name FROM Products WHERE remaining_amount > 0')
+      .then(function (res) {
+        return DB.getAll(res);
     });
   };
 
@@ -98,14 +99,15 @@ MIM.factory('Product', function ($cordovaSQLite, DB) {
       'selling_price, purchase_price, DATETIME(created_at, \'localtime\') AS ' +
       'created_date, DATETIME(updated_at, \'localtime\') AS updated_date ' +
       'FROM Products WHERE id = ?', parameters).then(function (res) {
-      return DB.getById(res);
+        return DB.getById(res);
     });
   };
 
   this.getAmount = function (productId) {
     var parameters = [productId];
-    return DB.queryStatement('SELECT remaining_amount FROM Products WHERE id = ?', parameters).then(function (res) {
-      return DB.getById(res);
+    return DB.queryStatement('SELECT remaining_amount FROM Products WHERE id = ?', parameters)
+      .then(function (res) {
+        return DB.getById(res);
     });
   };
 
@@ -146,7 +148,7 @@ MIM.factory('Product', function ($cordovaSQLite, DB) {
   this.orderByAmount = function () {
     return DB.queryStatement('SELECT id, name, remaining_amount FROM Products ' +
       'ORDER BY remaining_amount DESC').then(function (res) {
-      return DB.getAll(res);
+        return DB.getAll(res);
     });
   };
 

@@ -48,7 +48,7 @@ MIM.controller('SalesController', function ($scope, $ionicPopup, Customer, Produ
     $scope.products = products;
   });
 
-  $scope.addSale = function(saleData) {
+  $scope.addSale = function (saleData) {
     Sale.addTransaction(saleData).then(function (res) {
       Sale.addBuying(res.insertId, saleData);
       $scope.getRemainingAmount(saleData.products, saleData.amount);
@@ -58,14 +58,14 @@ MIM.controller('SalesController', function ($scope, $ionicPopup, Customer, Produ
     });
   };
 
-  $scope.getRemainingAmount = function(id, amount) {
+  $scope.getRemainingAmount = function (id, amount) {
     Product.getAmount(id).then(function (productAmount) {
       $scope.remaining_amount = productAmount.remaining_amount - amount;
       $scope.updateProductAmount(id, $scope.remaining_amount);
     });
   };
 
-  $scope.updateProductAmount = function(id, remaining_amount) {
+  $scope.updateProductAmount = function (id, remaining_amount) {
     Product.updateAmount(id, remaining_amount);
   };
 
@@ -104,7 +104,7 @@ MIM.controller('SalesOrderController', function ($scope, $ionicModal, $ionicPopu
     });
   };
 
-  $scope.addOrder = function(ordersData) {
+  $scope.addOrder = function (ordersData) {
     Order.addTransaction(ordersData).then(function (res) {
       Order.addOrder(res.insertId, ordersData);
       Customer.get(ordersData.customers).then(function (customers) {
@@ -163,7 +163,7 @@ MIM.controller('OrderDetailController', function ($scope, $stateParams, Order) {
 });
 
 MIM.controller('AddInventoryController', function ($scope, $ionicPopup, Product) {
-  $scope.addProduct = function(productData) {
+  $scope.addProduct = function (productData) {
     Product.add(productData);
     $scope.showAlert();
     productData.newItem = '';
@@ -194,7 +194,7 @@ MIM.controller('InventoryItemsController', function ($scope, $ionicModal, $ionic
     });
   };
 
-  $scope.editItem = function(productData) {
+  $scope.editItem = function (productData) {
     Product.update(productData);
     $scope.populateProducts();
     $scope.closeItemModal();
@@ -272,19 +272,19 @@ MIM.controller('CustomerController', function ($scope, $ionicModal, $ionicPopup,
   });
 
   $scope.populateCustomers = function () {
-    Customer.all().then(function(customers) {
+    Customer.all().then(function (customers) {
       $scope.customers = customers;
     });
   };
 
-  $scope.addCustomer = function(customersData) {
+  $scope.addCustomer = function (customersData) {
     Customer.add(customersData);
     $scope.populateCustomers();
     $scope.closeCustomerModal(1);
     $scope.cleanForm();
   };
 
-  $scope.editCustomer = function(customersData) {
+  $scope.editCustomer = function (customersData) {
     Customer.update(customersData);
     $scope.populateCustomers();
     $scope.closeCustomerModal(2);
