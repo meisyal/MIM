@@ -2,8 +2,8 @@
   <ion-content>
     <ion-list>
       <ion-item ng-repeat="item in inventory" href="#/app/item-detail/{{ item.id }}">
-        {{ item.product_name }}
-        <span class="badge badge-balanced">{{ item.product_amount }}</span>
+        {{ item.name }}
+        <span class="badge badge-balanced">{{ item.remaining_amount }}</span>
         <ion-option-button class="button-positive icon ion-android-create" ng-click="openItemModal(item)"></ion-option-button>
         <ion-option-button class="button-assertive icon ion-android-delete" ng-click="deleteItem(item)"></ion-option-button>
       </ion-item>
