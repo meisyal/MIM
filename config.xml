@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.focusedsamurai.mim" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="id.meisyal.mim" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>MIM</name>
   <description>
-        An Ionic mobile inventory manager application.
+        An inventory manager mobile application built with Ionic framework.
     </description>
   <author email="andriasonline@gmail.com" href="http://meisyal.web.id/">
       MIM Project Team
