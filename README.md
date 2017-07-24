@@ -2,7 +2,7 @@
 
 MIM stands for **M**obile **I**nventory **M**anager.
 
-**MIM** is a mobile phone application for a shopkeeper. This application is
+MIM is a mobile phone application for a shopkeeper. This application is
 designed to help a shopkeeper to manage his small shop inventory. A shopkeeper
 usually takes inventory activities into a notebook. We looked it is so hard to
 handle some cases: knowing the number of item in inventory or reporting monthly
